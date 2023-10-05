@@ -1,0 +1,1 @@
+# kinde-translations
