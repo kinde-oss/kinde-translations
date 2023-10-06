@@ -1,0 +1,27 @@
+{
+  "name": "@kinde-oss/kinde-translations",
+  "version": "0.0.1",
+  "description": "Translations for Kinde user facing flows",
+  "private": true,
+  "author": {
+    "name": "Kinde",
+    "email": "engineering@kinde.com",
+    "url": "https://kinde.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kinde-oss/kinde-translations"
+  },
+  "bugs": "https://github.com/kinde-oss/kinde-translations/issues",
+  "homepage": "https://kinde.com",
+  "license": "MIT",
+  "keywords": [
+    "Kinde",
+    "i18n",
+    "multi-language",
+    "translations"
+  ],
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}
