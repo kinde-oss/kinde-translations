@@ -22,11 +22,10 @@
     "translations"
   ],
   "devDependencies": {
-    "prettier": "^3.0.3",
-    "ajv-cli": "^5.0.0"
+    "ajv-cli": "5.0.0",
+    "prettier": "^3.0.3"
   },
   "scripts": {
     "validate": "find . -type f -name 'auth.json' -exec ajv validate -s auth-schema.json -d {} \\;"
-  },
-  "dependencies": {}
+  }
 }
