@@ -22,6 +22,4 @@ jobs:
         run: npm install
 
       - name: Validate auth.json translation files
-        run: |
-          npm install ajv-cli -g
-          find . -type f \( -name "auth.json" -o -name "auth-schema.json" \) -exec ajv validate -s $auth-schema.json -d {} \;
+        run: npm run validate
