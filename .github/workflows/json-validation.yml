@@ -1,0 +1,26 @@
+name: Translations - JSON Schema Validation
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Validate auth.json translation files
+        run: |
+          npm install ajv
+          find . -type f \( -name "auth.json" -o -name "auth-schema.json" \) -exec ajv validate -s $auth-schema.json -d {} \;

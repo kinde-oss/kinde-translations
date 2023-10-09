@@ -23,5 +23,11 @@
   ],
   "devDependencies": {
     "prettier": "^3.0.3"
+  },
+  "scripts": {
+    "validate-json": "find . -type f -name 'auth.json' -exec ajv validate -s auth-schema.json -d {} \\;"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0"
   }
 }
