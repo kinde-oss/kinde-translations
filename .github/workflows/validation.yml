@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  validate-json:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
