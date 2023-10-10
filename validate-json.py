@@ -3,11 +3,13 @@ import jsonschema
 from jsonschema import validate
 import os
 
+# Get the current directory as the search location
 search_dir = os.getcwd()
 
+# Path to the JSON schema file
 schema_file = "auth-schema.json"
 
-# validate JSON func
+# Function to validate JSON files against the schema
 def validate_json(file_path):
     with open(file_path, "r") as json_file:
         json_data = json.load(json_file)
@@ -15,12 +17,12 @@ def validate_json(file_path):
         schema_data = json.load(schema)
     try:
         validate(instance=json_data, schema=schema_data)
-        print(f"{file_path} is valid")
+        print(f"\x1b[32m{file_path} valid\x1b[0m")
     except jsonschema.exceptions.ValidationError as e:
-        print(f"{file_path} is invalid")
-        print(f"Validation Error: {e.message}")
+        print(f"\x1b[31m{file_path} invalid")
+        print(f"Validation Error: {e.message}\x1b[0m")
 
-# finds any file named auth.json
+# Traverse the directory and find files named "auth.json"
 for root, dirs, files in os.walk(search_dir):
     for file in files:
         if file == "auth.json":
