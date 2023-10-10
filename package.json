@@ -22,10 +22,10 @@
     "translations"
   ],
   "devDependencies": {
-    "prettier": "^3.0.3",
-    "python": "^3"
+    "prettier": "^3.0.3"
   },
   "scripts": {
     "validate-json": "python3 validate-json.py;"
-  }
+  },
+  "preinstall": "echo 'Please ensure you have Python3 installed to run the validation script.'"
 }
