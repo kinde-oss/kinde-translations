@@ -19,7 +19,9 @@ jobs:
           node-version: 16
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          npm install
+          pip3 install jsonschema
 
       - name: Validate auth.json translation files
         run: |

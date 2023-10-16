@@ -27,5 +27,5 @@
   "scripts": {
     "validate-json": "python3 validate-json.py;"
   },
-  "preinstall": "echo 'Please ensure you have Python3 installed to run the validation script.'"
+  "preinstall": "echo 'Before running the validation script locally, please ensure you have Python 3 installed. Also, please install the `jsonschema` package by running `pip3 install jsonschema`.'"
 }
