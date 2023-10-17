@@ -4,6 +4,26 @@ This repo contains all the translation files for Kinde public facing screens e.g
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com) [![Kinde Docs](https://img.shields.io/badge/Kinde-Docs-eee?style=flat-square)](https://kinde.com/docs/) [![Kinde Community](https://img.shields.io/badge/Kinde-Community-eee?style=flat-square)](https://thekindecommunity.slack.com)
 
+## Contributing new languages
+
+We love contributions, if you're keen to get your language supported by Kinde, here are the steps to do so:
+
+1. Fork this repo.
+
+2. Please create a new directory named the languages code ( codes can be found in the table below).
+
+For example, if you were adding Amharic you would do so in a new directory called `am`.
+
+3. Copy our base `auth.json` from `en` into your new directory and update translations for all relevant values.
+
+Where you see ${some_text} this is variable text our system automatically generates, you do not need to translate it, but need to include the variable in the correct order in your translation.
+
+4. Run `npm run validate` which will check all files against our json schema to make sure all keys are accounted for.
+
+5. Make a PR from your fork back to this repo.
+
+6. When in doubt, please refer to Kinde’s [contributing guidelines](https://github.com/kinde-oss/.github/blob/489e2ca9c3307c2b2e098a885e22f2239116394a/CONTRIBUTING.md).
+
 ## Language codes
 
 | Language tag (BCP 47) | English name           |
@@ -96,10 +116,6 @@ This repo contains all the translation files for Kinde public facing screens e.g
 ## Publishing
 
 The core team handles publishing.
-
-## Contributing
-
-Please refer to Kinde’s [contributing guidelines](https://github.com/kinde-oss/.github/blob/489e2ca9c3307c2b2e098a885e22f2239116394a/CONTRIBUTING.md).
 
 ## License
 
