@@ -1,0 +1,25 @@
+name: Translations - JSON Schema Validation
+
+on:
+  push:
+    branches:
+      - "*"
+      - "*/*"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Validate auth.json translation files
+        run: npm run validate
