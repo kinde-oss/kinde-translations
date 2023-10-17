@@ -35,9 +35,6 @@
             "credit_logo_link": {
               "type": "string"
             },
-            "credit_logo_label": {
-              "type": "string"
-            },
             "skip_link_main": {
               "type": "string"
             }
@@ -46,7 +43,6 @@
             "logo_alt",
             "credit_powered_by",
             "credit_logo_link",
-            "credit_logo_label",
             "skip_link_main"
           ]
         },
@@ -653,6 +649,9 @@
         "recovery_code_verify_page": {
           "type": "object",
           "properties": {
+            "page_title": {
+              "type": "string"
+            },
             "heading": {
               "type": "string"
             },
@@ -682,6 +681,7 @@
             }
           },
           "required": [
+            "page_title",
             "heading",
             "description",
             "recovery_code_input_label",
