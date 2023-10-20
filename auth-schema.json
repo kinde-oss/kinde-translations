@@ -35,9 +35,6 @@
             "credit_logo_link": {
               "type": "string"
             },
-            "credit_logo_label": {
-              "type": "string"
-            },
             "skip_link_main": {
               "type": "string"
             }
@@ -46,7 +43,6 @@
             "logo_alt",
             "credit_powered_by",
             "credit_logo_link",
-            "credit_logo_label",
             "skip_link_main"
           ]
         },
@@ -168,6 +164,12 @@
             "email_input_error_invitation_mismatch": {
               "type": "string"
             },
+            "email_input_error_no_account_found": {
+              "type": "string"
+            },
+            "auth_form_error_no_auth_methods_enabled": {
+              "type": "string"
+            },
             "continue_with_email_button": {
               "type": "string"
             },
@@ -185,9 +187,6 @@
             },
             "no_account_link": {
               "type": "string"
-            },
-            "auth_form_error_no_auth_methods_enabled": {
-              "type": "string"
             }
           },
           "required": [
@@ -198,13 +197,14 @@
             "email_input_error_invalid",
             "email_input_error_required",
             "email_input_error_invitation_mismatch",
+            "email_input_error_no_account_found",
+            "auth_form_error_no_auth_methods_enabled",
             "continue_with_email_button",
             "auth_block_separator",
             "continue_with_social_provider_button",
             "continue_with_enterprise_provider_button",
             "no_account_description",
-            "no_account_link",
-            "auth_form_error_no_auth_methods_enabled"
+            "no_account_link"
           ]
         },
         "sign_up_page": {
@@ -273,6 +273,18 @@
             "disclaimer_terms_of_use_link": {
               "type": "string"
             },
+            "disclaimer_clickwrap_input_label": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_error_required": {
+              "type": "string"
+            },
+            "disclaimer_dialog_heading": {
+              "type": "string"
+            },
+            "disclaimer_dialog_description": {
+              "type": "string"
+            },
             "auth_form_error_terms_not_accepted": {
               "type": "string"
             },
@@ -305,6 +317,10 @@
             "disclaimer",
             "disclaimer_privacy_link",
             "disclaimer_terms_of_use_link",
+            "disclaimer_clickwrap_input_label",
+            "disclaimer_clickwrap_error_required",
+            "disclaimer_dialog_heading",
+            "disclaimer_dialog_description",
             "auth_form_error_terms_not_accepted",
             "auth_form_error_no_auth_methods_enabled",
             "auth_form_error_org_not_accepting_registrations"
@@ -395,6 +411,9 @@
             },
             "continue_button": {
               "type": "string"
+            },
+            "password_input_error_unknown_error": {
+              "type": "string"
             }
           },
           "required": [
@@ -407,7 +426,8 @@
             "password_input_error_extra_space",
             "confirm_password_input_label",
             "confirm_password_input_error_mismatch",
-            "continue_button"
+            "continue_button",
+            "password_input_error_unknown_error"
           ]
         },
         "recovery_codes_page": {
@@ -433,6 +453,15 @@
             },
             "download_button": {
               "type": "string"
+            },
+            "recovery_codes_page_error_no_codes": {
+              "type": "string"
+            },
+            "recovery_codes_page_error_already_viewed": {
+              "type": "string"
+            },
+            "back_home_button": {
+              "type": "string"
             }
           },
           "required": [
@@ -442,7 +471,10 @@
             "copy_button",
             "print_button",
             "continue_button",
-            "download_button"
+            "download_button",
+            "recovery_codes_page_error_no_codes",
+            "recovery_codes_page_error_already_viewed",
+            "back_home_button"
           ]
         },
         "subscribe_form_widget": {
@@ -536,6 +568,9 @@
             },
             "cant_sign_in_link": {
               "type": "string"
+            },
+            "password_input_error_unknown_error": {
+              "type": "string"
             }
           },
           "required": [
@@ -548,7 +583,8 @@
             "password_input_error_too_short",
             "continue_button",
             "cant_sign_in_description",
-            "cant_sign_in_link"
+            "cant_sign_in_link",
+            "password_input_error_unknown_error"
           ]
         },
         "sms_verify_code_page": {
@@ -578,6 +614,9 @@
             "code_input_error_resend_requested_too_soon": {
               "type": "string"
             },
+            "confirmation_code_input_error_unknown_error": {
+              "type": "string"
+            },
             "continue_button": {
               "type": "string"
             },
@@ -600,10 +639,58 @@
             "code_input_error_incorrect_code",
             "code_input_error_incorrect_code_length",
             "code_input_error_resend_requested_too_soon",
+            "confirmation_code_input_error_unknown_error",
             "continue_button",
             "didnt_receive_a_code_description",
             "didnt_receive_a_code_link",
             "choose_another_method_link"
+          ]
+        },
+        "recovery_code_verify_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "recovery_code_input_label": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
+            },
+            "recovery_code_input_error_unknown_error": {
+              "type": "string"
+            },
+            "recovery_code_input_error_required": {
+              "type": "string"
+            },
+            "recovery_code_input_error_too_short": {
+              "type": "string"
+            },
+            "recovery_code_input_error_invalid": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "recovery_code_input_label",
+            "continue_button",
+            "choose_another_method_link",
+            "recovery_code_input_error_unknown_error",
+            "recovery_code_input_error_required",
+            "recovery_code_input_error_too_short",
+            "recovery_code_input_error_invalid"
           ]
         },
         "verification_code_sms": {
@@ -683,6 +770,9 @@
             },
             "success_description": {
               "type": "string"
+            },
+            "success_link_url": {
+              "type": "string"
             }
           },
           "required": [
@@ -698,7 +788,8 @@
             "email_input_error_invalid",
             "email_input_error_required",
             "email_input_error_duplicate_email_found",
-            "success_description"
+            "success_description",
+            "success_link_url"
           ]
         },
         "sign_in_confirm_code_page": {
@@ -742,6 +833,9 @@
             },
             "warning_too_many_incorrect_attempts": {
               "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
             }
           },
           "required": [
@@ -757,7 +851,8 @@
             "continue_button",
             "didnt_receive_a_code_link",
             "didnt_receive_a_code_description",
-            "warning_too_many_incorrect_attempts"
+            "warning_too_many_incorrect_attempts",
+            "choose_another_method_link"
           ]
         },
         "sign_up_confirm_code_page": {
@@ -807,6 +902,9 @@
             },
             "warning_too_many_incorrect_attempts": {
               "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
             }
           },
           "required": [
@@ -824,7 +922,8 @@
             "didnt_receive_a_code_description",
             "didnt_receive_a_code_link",
             "continue_button",
-            "warning_too_many_incorrect_attempts"
+            "warning_too_many_incorrect_attempts",
+            "choose_another_method_link"
           ]
         },
         "authenticator_app_manual_page": {
@@ -967,6 +1066,7 @@
         "subscribe_form_widget",
         "password_verify_page",
         "sms_verify_code_page",
+        "recovery_code_verify_page",
         "verification_code_sms",
         "choose_organization_page",
         "request_access_page",
