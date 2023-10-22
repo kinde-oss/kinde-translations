@@ -14,6 +14,8 @@ def validate_json(file_path, schema_data):
 
     validation_errors = []
 
+    relative_file_path = os.path.relpath(file_path, search_dir)
+
     for error in validator.iter_errors(json_data):
         validation_errors.append(error.message)
 
@@ -22,7 +24,8 @@ def validate_json(file_path, schema_data):
     else:
         print(f"\x1b[31m{file_path} is invalid")
         for error in validation_errors:
-            print(f"\x1b[31mValidation Error: {error}\x1b[0m")
+            indented_error = (" " * 4) + "• "
+            print(f"\x1b[31m{indented_error}Error on {relative_file_path}: {error}\x1b[0m")
 
 # Load schema
 with open(schema_file, "r") as schema:
