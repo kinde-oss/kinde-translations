@@ -5,27 +5,38 @@ import os
 search_dir = os.getcwd()
 schema_file = "auth-schema.json"
 
-# Validcation func
+# Validation function
 def validate_json(file_path, schema_data):
     with open(file_path, "r") as json_file:
         json_data = json.load(json_file)
 
     validator = jsonschema.Draft7Validator(schema_data)
 
-    validation_errors = []
-
     relative_file_path = os.path.relpath(file_path, search_dir)
+    validation_errors = {}
 
     for error in validator.iter_errors(json_data):
-        validation_errors.append(error.message)
+        error_msg = error.message
+        error_path = list(error.absolute_path)
+        error_section = error_path[1] if len(error_path) > 1 else None
+
+        if error_section:
+            if error_section not in validation_errors:
+                validation_errors[error_section] = []
+            validation_errors[error_section].append(f"• {error_msg}")
+        else:
+            if "global" not in validation_errors:
+                validation_errors["global"] = []
+            validation_errors["global"].append(f"• {error_msg}")
 
     if not validation_errors:
         print(f"\x1b[32m{file_path} is valid\x1b[0m")
     else:
         print(f"\x1b[31m{file_path} is invalid")
-        for error in validation_errors:
-            indented_error = (" " * 4) + "• "
-            print(f"\x1b[31m{indented_error}Error on {relative_file_path}: {error}\x1b[0m")
+        for section, errors in validation_errors.items():
+            print(f"    ↳ {section}:")
+            for error in errors:
+                print(f"        {error}")
 
 # Load schema
 with open(schema_file, "r") as schema:
