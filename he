@@ -278,7 +278,7 @@
                 "credit_powered_by": "מופעל על ידי"
             },
             "verification_code_sms": {
-                "description": "${generated_code} הוא הקוד החד-פעמי שלך לכניסה ל- ${business_name}\n\n@ ${business_name} # ${generated_code]"
+                "description": "${generated_code} הוא הקוד החד-פעמי שלך לכניסה ל- ${business_name}\n\n @${receiver_domain} #${generated_code]"
             }
         }
     }
