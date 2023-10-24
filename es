@@ -278,7 +278,7 @@
                 "credit_powered_by": "Desarrollado por"
             },
             "verification_code_sms": {
-                "description": "\"${generated_code} es tu código único para iniciar sesión en ${business_name}\n\n@ ${business_name} # ${generated_code]"
+                "description": "\"${generated_code} es tu código único para iniciar sesión en ${business_name}\n\n@${receiver_domain} #${generated_code]"
             }
         }
    }
