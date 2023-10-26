@@ -113,6 +113,22 @@ Where you see ${some_text} this is variable text our system automatically genera
 | zh-Hant               | Traditional Chinese    |
 | zu                    | Zulu                   |
 
+## Validating JSON Files
+
+You can validate your `auth.json` file(s) locally using `npm run validate-json` in terminal. Please follow these steps to ensure your files are correctly validated:
+
+**Prerequisites**:
+
+- Ensure you have Python 3 installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
+
+**Installing Dependencies**:
+
+1. Open your terminal.
+2. Use `pip3` to install the `jsonschema` package by running the following command:
+   ```sh
+   pip3 install jsonschema
+   ```
+
 ## Publishing
 
 The core team handles publishing.

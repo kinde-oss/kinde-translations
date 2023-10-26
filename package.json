@@ -22,10 +22,10 @@
     "translations"
   ],
   "devDependencies": {
-    "ajv-cli": "^5.0.0",
     "prettier": "^3.0.3"
   },
   "scripts": {
-    "validate": "find . -type f -name 'auth.json' -exec ajv validate -s auth-schema.json -d {} \\;"
-  }
+    "validate": "python3 validate-json.py;"
+  },
+  "preinstall": "echo 'Before running the validation script locally, please ensure you have Python 3 installed. Also, please install the `jsonschema` package by running `pip3 install jsonschema`.'"
 }
