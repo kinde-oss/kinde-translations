@@ -22,10 +22,22 @@
     "translations"
   ],
   "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
     "prettier": "^3.0.3"
   },
   "scripts": {
-    "validate": "python3 validate-json.py;"
+    "validate": "python3 validate-json.py;",
+    "prepare": "husky install",
+    "lint": "prettier --write"
   },
-  "preinstall": "echo 'Before running the validation script locally, please ensure you have Python 3 installed. Also, please install the `jsonschema` package by running `pip3 install jsonschema`.'"
+  "preinstall": "echo 'Before running the validation script locally, please ensure you have Python 3 installed. Also, please install the `jsonschema` package by running `pip3 install jsonschema`.'",
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false
+  },
+  "lint-staged": {
+    "*.{js,json,md}": "prettier --write"
+  }
 }
