@@ -1,8 +1,9 @@
 import json
 import jsonschema
 import os
+import sys
 
-search_dir = os.getcwd()
+search_dir = os.path.join(os.getcwd())
 schema_file = "auth-schema.json"
 
 # Validation function
@@ -30,21 +31,30 @@ def validate_json(file_path, schema_data):
             validation_errors["global"].append(f"• {error_msg}")
 
     if not validation_errors:
-        print(f"\x1b[32m{file_path} is valid\x1b[0m")
+        print(f"\x1b[32m{relative_file_path} is valid\x1b[0m")
     else:
-        print(f"\x1b[31m{file_path} is invalid")
+        print(f"\x1b[31m{relative_file_path} is invalid")
         for section, errors in validation_errors.items():
             print(f"    ↳ {section}:")
             for error in errors:
                 print(f"        {error}")
 
-# Load schema
+    return not bool(validation_errors)
+
 with open(schema_file, "r") as schema:
     schema_data = json.load(schema)
 
-# Find auth.json files
+all_files_valid = True
+
+# find auth.json files
 for root, dirs, files in os.walk(search_dir):
-    for file in files:
-        if file == "auth.json":
-            file_path = os.path.join(root, file)
-            validate_json(file_path, schema_data)
+    if root != search_dir:
+        for file in files:
+            if file == "auth.json":
+                file_path = os.path.join(root, file)
+                is_file_valid = validate_json(file_path, schema_data)
+                if not is_file_valid:
+                    all_files_valid = False
+
+if not all_files_valid:
+    sys.exit(1)
