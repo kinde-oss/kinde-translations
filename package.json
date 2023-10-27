@@ -1,31 +1,42 @@
 {
-  "name": "@kinde-oss/kinde-translations",
-  "version": "0.0.1",
-  "description": "Translations for Kinde user facing flows",
-  "private": true,
-  "author": {
-    "name": "Kinde",
-    "email": "engineering@kinde.com",
-    "url": "https://kinde.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kinde-oss/kinde-translations"
-  },
-  "bugs": "https://github.com/kinde-oss/kinde-translations/issues",
-  "homepage": "https://kinde.com",
-  "license": "MIT",
-  "keywords": [
-    "Kinde",
-    "i18n",
-    "multi-language",
-    "translations"
-  ],
-  "devDependencies": {
-    "prettier": "^3.0.3"
-  },
-  "scripts": {
-    "validate": "python3 validate-json.py;"
-  },
-  "preinstall": "echo 'Before running the validation script locally, please ensure you have Python 3 installed. Also, please install the `jsonschema` package by running `pip3 install jsonschema`.'"
+    "name": "@kinde-oss/kinde-translations",
+    "version": "0.0.1",
+    "description": "Translations for Kinde user facing flows",
+    "private": true,
+    "author": {
+        "name": "Kinde",
+        "email": "engineering@kinde.com",
+        "url": "https://kinde.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kinde-oss/kinde-translations"
+    },
+    "bugs": "https://github.com/kinde-oss/kinde-translations/issues",
+    "homepage": "https://kinde.com",
+    "license": "MIT",
+    "keywords": [
+        "Kinde",
+        "i18n",
+        "multi-language",
+        "translations"
+    ],
+    "devDependencies": {
+        "husky": "^8.0.3",
+        "lint-staged": "^15.0.2",
+        "prettier": "^3.0.3"
+    },
+    "scripts": {
+        "validate": "python3 validate-json.py;",
+        "prepare": "husky install"
+    },
+    "preinstall": "echo 'Before running the validation script locally, please ensure you have Python 3 installed. Also, please install the `jsonschema` package by running `pip3 install jsonschema`.'",
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": false
+    },
+    "lint-staged": {
+        "*.{js,json,md}": "prettier --write"
+    }
 }
