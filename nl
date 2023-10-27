@@ -278,7 +278,7 @@
                 "credit_powered_by": "Mogelijk gemaakt door"
             },
             "verification_code_sms": {
-                "description": "${generated_code} is uw eenmalige code om u aan te melden bij ${receiver_domain}\n\n @${receiver_domain} #${generated_code]"
+                "description": "${generated_code} is uw eenmalige code om u aan te melden bij ${business_name}\n\n@${receiver_domain} #${generated_code}"
             }
         }
     }
