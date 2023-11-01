@@ -985,6 +985,9 @@
             "description": {
               "type": "string"
             },
+            "verified_authentication_app_description": {
+              "type": "string"
+            },
             "code_input_label": {
               "type": "string"
             },
@@ -1014,6 +1017,7 @@
             "page_title",
             "heading",
             "description",
+            "verified_authentication_app_description",
             "code_input_label",
             "code_input_error_required",
             "code_input_error_expired_code",
