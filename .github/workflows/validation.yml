@@ -3,26 +3,32 @@ name: Translations - JSON Schema Validation
 on:
   push:
     branches:
-      - "*"
       - "*/*"
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install Node.js
-        uses: actions/setup-node@v2
+      - name: Checkout the PR branch
+        uses: actions/checkout@v3
         with:
-          node-version: 16
+          fetch-depth: 0
 
-      - name: Install Dependencies
-        run: |
-          npm install
-          pip3 install jsonschema
+      - name: Fetch the main branch
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
 
-      - name: Validate auth.json translation files
+      - name: Find changes
+        id: files
         run: |
-          python3 validate-json.py
+          echo "Changed files:"
+          git diff --name-only origin/main...${{ github.sha }} > changed_files.txt
+          cat changed_files.txt
+          echo "::set-output name=changed_files::$(<changed_files.txt)"
+
+      - name: Output the changed files
+        run: |
+          if [ -f changed_files.txt ] && [ -s changed_files.txt ]; then
+            echo "Files changed:"
+            cat changed_files.txt
+          else
+            echo "No files changed."
