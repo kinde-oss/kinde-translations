@@ -3,7 +3,6 @@ name: Translation Validation on PR
 on:
   pull_request:
     branches:
-      - "*"
       - "*/*"
 
 jobs:
@@ -32,7 +31,6 @@ jobs:
 
       - name: Find and list modified auth.json files
         id: getfiles
-        # testing
         run: |
           git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           git diff --name-only origin/main...${{ github.sha }} | grep 'auth.json' > changed_files.txt
