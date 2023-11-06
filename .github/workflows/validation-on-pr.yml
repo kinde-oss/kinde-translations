@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4.1.1
         with:
-          fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+          fetch-depth: 2 # OR "2" -> To retrieve the preceding commit.
 
       - name: Install Node.js
         uses: actions/setup-node@v4.0.0
@@ -37,13 +37,16 @@ jobs:
           if [ -s changed_files.txt ]; then
             echo "Changed auth.json files:"
             cat changed_files.txt
-            echo "::set-output name=files_to_validate::$(cat changed_files.txt)"
+            echo "files_to_validate=$(cat changed_files.txt)" >> $GITHUB_ENV
           else
             echo "No changed auth.json files to validate."
-            echo "::set-output name=files_to_validate::"
+            echo "files_to_validate=" >> $GITHUB_ENV
           fi
 
       - name: Validate JSON files
-        if: steps.getfiles.outputs.files_to_validate
+        if: env.files_to_validate
         run: |
-          python3 validate-json.py auth-schema.json ${{ steps.getfiles.outputs.files_to_validate }}
+          for file in ${{ env.files_to_validate }}
+          do
+            python3 validate-json.py auth-schema.json "$file"
+          done
