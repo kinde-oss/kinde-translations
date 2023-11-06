@@ -10,11 +10,6 @@ jobs:
   validate_pr_translations:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main branch
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: "main"
-
       - name: Checkout code
         uses: actions/checkout@v4.1.1
         with:
@@ -30,24 +25,47 @@ jobs:
           npm install
           pip3 install jsonschema
 
-      - name: Find and list modified auth.json files
-        id: getfiles
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        # To compare changes between the current commit and the last pushed remote commit set `since_last_remote_commit: true`. e.g
+        with:
+          since_last_remote_commit: true
+          files: |
+            auth.json
+
+      - name: List all changed files
         run: |
-          git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
-          git diff --name-only origin/main...${{ github.sha }} | grep 'auth.json' > changed_files.txt
-          if [ -s changed_files.txt ]; then
-            echo "Changed auth.json files:"
-            cat changed_files.txt
-            echo "files_to_validate=$(cat changed_files.txt)" >> $GITHUB_ENV
-          else
-            echo "No changed auth.json files to validate."
-            echo "files_to_validate=" >> $GITHUB_ENV
-          fi
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      # - name: Find and list modified auth.json files
+      #   id: getfiles
+      #   run: |
+      #     git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+      #     git diff --name-only origin/main...${{ github.sha }} | grep 'auth.json' > changed_files.txt
+      #     if [ -s changed_files.txt ]; then
+      #       echo "Changed auth.json files:"
+      #       cat changed_files.txt
+      #       echo "files_to_validate=$(cat changed_files.txt)" >> $GITHUB_ENV
+      #     else
+      #       echo "No changed auth.json files to validate." >&2
+      #       echo "files_to_validate=" >> $GITHUB_ENV
+      #     fi
+
+      - name: Set files_to_validate environment variable
+        if: steps.changed-files.outputs.any_changed_files == 'true'
+        run: echo "files_to_validate=${{ steps.changed-files.outputs.all_changed_files }}" >> $GITHUB_ENV
 
       - name: Validate JSON files
         if: env.files_to_validate
         run: |
-          for file in ${{ env.files_to_validate }}
+          for file in $(echo $files_to_validate | xargs -n1 echo)
           do
-            python3 validate-json.py auth-schema.json "$file"
+            if [[ $file == "auth.json" ]]; then
+              python3 validate-json.py auth-schema.json "$file"
+            else
+              echo "$file is not auth.json, skipping validation."
+            fi
           done
