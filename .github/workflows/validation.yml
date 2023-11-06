@@ -10,19 +10,45 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
         with:
-          node-version: 16
+          fetch-depth: 0
 
-      - name: Install Dependencies
-        run: |
-          npm install
-          pip3 install jsonschema
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: |
+            **/auth.json
 
-      - name: Validate auth.json translation files
+      - name: List all changed files
+        if: steps.changed-files.outputs.all_changed_files
         run: |
-          python3 validate-json.py
+          echo "Changed files:"
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+
+      - name: Validate JSON files
+        if: steps.changed-files.outputs.all_changed_files
+        run: |
+          python3 validate-json.py auth-schema.json ${{ steps.changed-files.outputs.all_changed_files }}
+
+  # DEPRECATED VALIDATION
+  # validate:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Install Node.js
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 16
+
+  #     - name: Install Dependencies
+  #       run: |
+  #         npm install
+  #         pip3 install jsonschema
+
+  #     - name: Validate auth.json translation files
+  #       run: |
+  #         python3 validate-json.py
