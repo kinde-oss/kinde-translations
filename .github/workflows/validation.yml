@@ -21,6 +21,11 @@ jobs:
           files: |
             **/auth.json
 
+      - name: Install Dependencies
+        run: |
+          pip3 install jsonschema
+          npm install
+
       - name: List all changed files
         if: steps.changed-files.outputs.all_changed_files
         run: |
