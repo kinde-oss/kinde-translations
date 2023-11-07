@@ -1,7 +1,7 @@
 name: Translations - JSON Schema Validation
 
 on:
-  push:
+  pull_request:
     branches:
       - "*"
       - "*/*"
