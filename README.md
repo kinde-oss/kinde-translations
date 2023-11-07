@@ -18,7 +18,10 @@ For example, if you were adding Amharic you would do so in a new directory calle
 
 Where you see ${some_text} this is variable text our system automatically generates, you do not need to translate it, but need to include the variable in the correct order in your translation.
 
-4. Run `npm run validate` which will check all files against our json schema to make sure all keys are accounted for.
+4. Validate your file(s) using the following steps:
+
+   1. Run `npm run validate` which will check all files against our json schema to make sure all keys are accounted for.
+   2. Run `npm run validate --file=en/auth.json` to check a single file.
 
 5. Make a PR from your fork back to this repo.
 
