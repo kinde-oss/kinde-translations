@@ -27,7 +27,7 @@
     "prettier": "^3.0.3"
   },
   "scripts": {
-    "validate": "python3 validate-json.py;",
+    "validate": "python3 validate-json.py auth-schema.json $npm_config_file;",
     "prepare": "husky install",
     "lint": "prettier --write"
   },
