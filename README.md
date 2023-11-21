@@ -61,6 +61,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | he                    | Hebrew                 |
 | hi                    | Hindi                  |
 | hr                    | Croatian               |
+| ht                    | Haitian Creole         |
 | hu                    | Hungarian              |
 | hy                    | Armenian               |
 | id                    | Indonesian             |
@@ -84,6 +85,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | my                    | Burmese                |
 | ne                    | Nepali                 |
 | nl                    | Dutch                  |
+| nl-BR                 | Flemish                |
 | nn                    | Norwegian Nynorsk      |
 | no                    | Norwegian Bokmål       |
 | pa                    | Punjabi                |
