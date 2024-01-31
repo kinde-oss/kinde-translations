@@ -101,6 +101,45 @@
             "choose_another_method_link"
           ]
         },
+        "mfa_email_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "email_input_label": {
+              "type": "string"
+            },
+            "email_input_error_required": {
+              "type": "string"
+            },
+            "email_input_error_invalid": {
+              "type": "string"
+            },
+            "email_input_error_email_in_use": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "continue_button",
+            "email_input_label",
+            "email_input_error_required",
+            "email_input_error_invalid",
+            "email_input_error_email_in_use"
+          ]
+        },
         "auth_error_page": {
           "type": "object",
           "properties": {
@@ -1124,11 +1163,55 @@
             "sign_in_another_way_separator",
             "sign_in_another_way_link"
           ]
+        },
+        "phone_number_component": {
+          "type": "object",
+          "properties": {
+            "phone_input_label": {
+              "type": "string"
+            },
+            "country_select_label": {
+              "type": "string"
+            },
+            "use_email_link": {
+              "type": "string"
+            },
+            "use_phone_link": {
+              "type": "string"
+            },
+            "phone_input_error_sms_limit_reached": {
+              "type": "string"
+            },
+            "phone_input_error_invalid_country_code": {
+              "type": "string"
+            },
+            "phone_input_error_required": {
+              "type": "string"
+            },
+            "phone_input_error_invalid_format": {
+              "type": "string"
+            },
+            "phone_input_error_no_account_found": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "phone_input_label",
+            "country_select_label",
+            "use_email_link",
+            "use_phone_link",
+            "phone_input_error_sms_limit_reached",
+            "phone_input_error_invalid_country_code",
+            "phone_input_error_required",
+            "phone_input_error_invalid_format",
+            "phone_input_error_no_account_found"
+          ]
         }
       },
       "required": [
         "base_layout",
         "mfa_sms_page",
+        "mfa_email_page",
         "auth_error_page",
         "secret_page",
         "sign_in_page",
@@ -1150,7 +1233,8 @@
         "authenticator_app_qr_code_page",
         "email_address_verification_email",
         "general_errors",
-        "account_not_found_page"
+        "account_not_found_page",
+        "phone_number_component"
       ]
     }
   },
