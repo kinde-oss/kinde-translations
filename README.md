@@ -29,48 +29,48 @@ Where you see ${some_text} this is variable text our system automatically genera
 
 ## Language codes
 
-| Language tag (BCP 47) | English name           |
-| --------------------- | ---------------------- |
+| Language tag (BCP 47) | English name           |Status
+| --------------------- | ---------------------- |----------------------
 | af                    | Afrikaans              |
 | am                    | Amharic                |
 | ar                    | Arabic                 |
-| ar-001                | Modern Standard Arabic |
+| ar-001                | Modern Standard Arabic |✅
 | az                    | Azerbaijani            |
 | bg                    | Bulgarian              |
 | bn                    | Bangla                 |
 | bs                    | Bosnian                |
 | ca                    | Catalan                |
-| cs                    | Czech                  |
+| cs                    | Czech                  |✅
 | cy                    | Welsh                  |
-| da                    | Danish                 |
-| de                    | German                 |
+| da                    | Danish                 |✅
+| de                    | German                 |✅
 | el                    | Greek                  |
-| en                    | English                |
-| en-AU                 | Australian English     |
-| en-GB                 | British English        |
-| en-US                 | American English       |
-| es                    | Spanish                |
+| en                    | English                |✅
+| en-AU                 | Australian English     |✅
+| en-GB                 | British English        |✅
+| en-US                 | American English       |✅
+| es                    | Spanish                |✅
 | es-419                | Latin American Spanish |
 | es-ES                 | European Spanish       |
 | et                    | Estonian               |
 | eu-ES                 | Basque                 |
 | fa                    | Persian                |
 | fi                    | Finnish                |
-| fil                   | Filipino               |
-| fr                    | French                 |
+| fil                   | Filipino               |✅
+| fr                    | French                 |✅
 | fr-CA                 | Canadian French        |
 | gl-ES                 | Galician               |
 | gu                    | Gujarati               |
-| he                    | Hebrew                 |
+| he                    | Hebrew                 |✅
 | hi                    | Hindi                  |
 | hr                    | Croatian               |
-| ht                    | Haitian Creole         |
+| ht                    | Haitian Creole         |✅
 | hu                    | Hungarian              |
 | hy                    | Armenian               |
-| id                    | Indonesian             |
+| id                    | Indonesian             |✅
 | is                    | Icelandic              |
-| it                    | Italian                |
-| ja                    | Japanese               |
+| it                    | Italian                |✅
+| ja                    | Japanese               |✅
 | ka                    | Georgian               |
 | kk                    | Kazakh                 |
 | km                    | Khmer                  |
@@ -84,32 +84,33 @@ Where you see ${some_text} this is variable text our system automatically genera
 | ml                    | Malayalam              |
 | mn                    | Mongolian              |
 | mr                    | Marathi                |
-| ms                    | Malay                  |
+| ms                    | Malay                  |✅
 | my                    | Burmese                |
 | ne                    | Nepali                 |
-| nl                    | Dutch                  |
+| nl                    | Dutch                  |✅
+| nl-BE                 | Dutch Belgium          |✅
 | nl-BR                 | Flemish                |
 | nn                    | Norwegian Nynorsk      |
-| no                    | Norwegian Bokmål       |
+| no                    | Norwegian Bokmål       |✅
 | pa                    | Punjabi                |
-| pl                    | Polish                 |
+| pl                    | Polish                 |✅
 | pt                    | Portuguese             |
-| pt-BR                 | Brazilian Portuguese   |
-| pt-PT                 | European Portuguese    |
-| ro                    | Romanian               |
-| ru                    | Russian                |
+| pt-BR                 | Brazilian Portuguese   |✅
+| pt-PT                 | European Portuguese    |✅
+| ro                    | Romanian               |✅
+| ru                    | Russian                |✅
 | si                    | Sinhala                |
 | sk                    | Slovak                 |
 | sl                    | Slovenian              |
 | sq                    | Albanian               |
 | sr                    | Serbian                |
-| sv                    | Swedish                |
+| sv                    | Swedish                |✅
 | sw                    | Swahili                |
 | ta                    | Tamil                  |
 | te                    | Telugu                 |
 | th                    | Thai                   |
-| tr                    | Turkish                |
-| uk                    | Ukrainian              |
+| tr                    | Turkish                |✅
+| uk                    | Ukrainian              |✅
 | ur                    | Urdu                   |
 | uz                    | Uzbek                  |
 | vi                    | Vietnamese             |
