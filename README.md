@@ -79,7 +79,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | ky                    | Kyrgyz                 |
 | lo                    | Lao                    |
 | lt                    | Lithuanian             |
-| lv                    | Latvian                |
+| lv                    | Latvian                |✅
 | mk                    | Macedonian             |
 | ml                    | Malayalam              |
 | mn                    | Mongolian              |
