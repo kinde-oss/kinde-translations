@@ -23,9 +23,11 @@ Where you see ${some_text} this is variable text our system automatically genera
    1. Run `npm run validate` which will check all files against our json schema to make sure all keys are accounted for.
    2. Run `npm run validate --file=en/auth.json` to check a single file.
 
-5. Make a PR from your fork back to this repo.
+5. Once you have completed translating the preferred language (e.g.`en/auth.json`) and passed validation checks, please mark it as done by copying this checkmark (✅) and placing it in the "Status" column of the table for your translated language in the README.md file.
 
-6. When in doubt, please refer to Kinde’s [contributing guidelines](https://github.com/kinde-oss/.github/blob/489e2ca9c3307c2b2e098a885e22f2239116394a/CONTRIBUTING.md).
+6. Make a PR from your fork back to this repo. In the PR comment, under Explain your changes, describe what language you added, changed, or fixed. Additionally, please describe briefly your experiences with translation (e.g. links to previous work). 
+
+7. When in doubt, please refer to Kinde’s [contributing guidelines](https://github.com/kinde-oss/.github/blob/489e2ca9c3307c2b2e098a885e22f2239116394a/CONTRIBUTING.md).
 
 ## Language codes
 
