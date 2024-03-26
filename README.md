@@ -56,7 +56,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | es-ES                 | European Spanish       |
 | et                    | Estonian               |
 | eu-ES                 | Basque                 |
-| fa                    | Persian                |
+| fa                    | Persian                |✅
 | fi                    | Finnish                |
 | fil                   | Filipino               |✅
 | fr                    | French                 |✅
