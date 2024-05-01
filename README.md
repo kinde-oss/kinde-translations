@@ -117,7 +117,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | uz                    | Uzbek                  |
 | vi                    | Vietnamese             |
 | zh                    | Chinese                |
-| zh-Hans               | Simplified Chinese     |
+| zh-Hans               | Simplified Chinese     |✅
 | zh-Hant               | Traditional Chinese    |
 | zu                    | Zulu                   |
 
