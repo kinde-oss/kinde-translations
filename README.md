@@ -115,7 +115,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | uk                    | Ukrainian              |✅
 | ur                    | Urdu                   |
 | uz                    | Uzbek                  |
-| vi                    | Vietnamese             |
+| vi                    | Vietnamese             |✅
 | zh                    | Chinese                |
 | zh-Hans               | Simplified Chinese     |✅
 | zh-Hant               | Traditional Chinese    |
