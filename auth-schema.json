@@ -285,6 +285,9 @@
             "email_input_error_invitation_mismatch": {
               "type": "string"
             },
+            "email_input_error_domain_invalid": {
+              "type": "string"
+            },
             "continue_with_email_button": {
               "type": "string"
             },
@@ -347,6 +350,7 @@
             "email_input_error_required",
             "email_input_error_invalid",
             "email_input_error_invitation_mismatch",
+            "email_input_error_domain_invalid",
             "continue_with_email_button",
             "auth_block_separator",
             "continue_with_social_provider_button",
@@ -1108,13 +1112,29 @@
             },
             "operation_not_permitted": {
               "type": "string"
+            },
+            "invitation_email_mismatch": {
+              "type": "string"
+            },
+            "invitation_expired": {
+              "type": "string"
+            },
+            "user_suspended": {
+              "type": "string"
+            },
+            "unknown_error": {
+              "type": "string"
             }
           },
           "required": [
             "account_not_found",
             "action_allowed_only_once",
             "no_organization_access",
-            "operation_not_permitted"
+            "operation_not_permitted",
+            "invitation_email_mismatch",
+            "invitation_expired",
+            "user_suspended",
+            "unknown_error"
           ]
         },
         "account_not_found_page": {
@@ -1206,6 +1226,61 @@
             "phone_input_error_invalid_format",
             "phone_input_error_no_account_found"
           ]
+        },
+        "username_component": {
+          "type": "object",
+          "properties": {
+            "username_input_label": {
+              "type": "string"
+            },
+            "username_input_error_required": {
+              "type": "string"
+            },
+            "username_input_error_invalid": {
+              "type": "string"
+            },
+            "username_input_error_no_account_found": {
+              "type": "string"
+            },
+            "username_input_error_invalid_format": {
+              "type": "string"
+            },
+            "username_input_error_already_exists": {
+              "type": "string"
+            },
+            "username_input_error_invalid_length": {
+              "type": "string"
+            },
+            "email_or_username_input_label": {
+              "type": "string"
+            },
+            "email_or_username_error_required": {
+              "type": "string"
+            },
+            "email_or_username_input_error_invalid": {
+              "type": "string"
+            },
+            "use_username_link": {
+              "type": "string"
+            },
+            "use_email_or_username_link": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "username_input_label",
+            "username_input_error_required",
+            "username_input_error_invalid",
+            "username_input_error_no_account_found",
+            "username_input_error_invalid_format",
+            "username_input_error_already_exists",
+            "username_input_error_invalid_length",
+            "email_or_username_input_label",
+            "email_or_username_error_required",
+            "email_or_username_input_error_invalid",
+            "use_username_link",
+            "use_email_or_username_link"
+          ]
         }
       },
       "required": [
@@ -1234,7 +1309,8 @@
         "email_address_verification_email",
         "general_errors",
         "account_not_found_page",
-        "phone_number_component"
+        "phone_number_component",
+        "username_component"
       ]
     }
   },
