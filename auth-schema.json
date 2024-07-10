@@ -335,6 +335,9 @@
             },
             "auth_form_error_org_not_accepting_registrations": {
               "type": "string"
+            },
+            "kp_usr_marketing_opt_in": {
+              "type": "string"
             }
           },
           "required": [
@@ -366,7 +369,8 @@
             "disclaimer_dialog_description",
             "auth_form_error_terms_not_accepted",
             "auth_form_error_no_auth_methods_enabled",
-            "auth_form_error_org_not_accepting_registrations"
+            "auth_form_error_org_not_accepting_registrations",
+            "kp_usr_marketing_opt_in"
           ]
         },
         "choose_mfa_method_page": {
@@ -1116,6 +1120,9 @@
             "invitation_email_mismatch": {
               "type": "string"
             },
+            "email_domain_not_allowed": {
+              "type": "string"
+            },
             "invitation_expired": {
               "type": "string"
             },
@@ -1132,6 +1139,7 @@
             "no_organization_access",
             "operation_not_permitted",
             "invitation_email_mismatch",
+            "email_domain_not_allowed",
             "invitation_expired",
             "user_suspended",
             "unknown_error"
