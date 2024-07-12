@@ -336,7 +336,7 @@
             "auth_form_error_org_not_accepting_registrations": {
               "type": "string"
             },
-            "kp_usr_marketing_opt_in": {
+            "kp_usr_is_marketing_opt_in_label": {
               "type": "string"
             }
           },
@@ -370,7 +370,7 @@
             "auth_form_error_terms_not_accepted",
             "auth_form_error_no_auth_methods_enabled",
             "auth_form_error_org_not_accepting_registrations",
-            "kp_usr_marketing_opt_in"
+            "kp_usr_is_marketing_opt_in_label"
           ]
         },
         "choose_mfa_method_page": {
