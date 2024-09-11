@@ -84,7 +84,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | lv                    | Latvian                | ✅     |
 | mk                    | Macedonian             |
 | ml                    | Malayalam              |
-| mn                    | Mongolian              |
+| mn                    | Mongolian              | ✅     |
 | mr                    | Marathi                |
 | ms                    | Malay                  | ✅     |
 | my                    | Burmese                |
