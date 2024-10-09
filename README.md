@@ -3,7 +3,7 @@
 This repo contains all the translation files for Kinde public facing screens e.g auth flows
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com) [![Kinde Docs](https://img.shields.io/badge/Kinde-Docs-eee?style=flat-square)](https://kinde.com/docs/) [![Kinde Community](https://img.shields.io/badge/Kinde-Community-eee?style=flat-square)](https://thekindecommunity.slack.com)
-   
+
 ## Contributing new languages
 
 We love contributions, if you're keen to get your language supported by Kinde, here are the steps to do so:
@@ -105,7 +105,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | sk                    | Slovak                 |
 | sl                    | Slovenian              |
 | sq                    | Albanian               |
-| sr                    | Serbian                |
+| sr                    | Serbian                | ✅     |
 | sv                    | Swedish                | ✅     |
 | sw                    | Swahili                |
 | ta                    | Tamil                  |
