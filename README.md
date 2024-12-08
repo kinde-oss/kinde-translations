@@ -77,7 +77,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | kk                    | Kazakh                 |
 | km                    | Khmer                  |
 | kn                    | Kannada                |
-| ko                    | Korean                 |
+| ko                    | Korean                 | ✅     |
 | ky                    | Kyrgyz                 |
 | lo                    | Lao                    |
 | lt                    | Lithuanian             |
