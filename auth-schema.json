@@ -477,6 +477,57 @@
             "password_input_error_unknown_error"
           ]
         },
+        "password_reset_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "password_input_label": {
+              "type": "string"
+            },
+            "password_input_error_too_common": {
+              "type": "string"
+            },
+            "password_input_error_too_short": {
+              "type": "string"
+            },
+            "password_input_error_extra_space": {
+              "type": "string"
+            },
+            "confirm_password_input_label": {
+              "type": "string"
+            },
+            "confirm_password_input_error_mismatch": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "password_input_error_unknown_error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "password_input_label",
+            "password_input_error_too_common",
+            "password_input_error_too_short",
+            "password_input_error_extra_space",
+            "confirm_password_input_label",
+            "confirm_password_input_error_mismatch",
+            "continue_button",
+            "password_input_error_unknown_error"
+          ]
+        },
         "recovery_codes_page": {
           "type": "object",
           "properties": {
@@ -1302,6 +1353,7 @@
         "choose_mfa_method_page",
         "account_locked_page",
         "password_setup_page",
+        "password_reset_page",
         "recovery_codes_page",
         "subscribe_form_widget",
         "password_verify_page",
