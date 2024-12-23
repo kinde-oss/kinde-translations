@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip3 install jsonschema
+          sudo apt install python3-jsonschema
           npm install
 
       - name: List all changed files
