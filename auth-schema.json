@@ -1083,9 +1083,6 @@
             "description": {
               "type": "string"
             },
-            "verified_authentication_app_description": {
-              "type": "string"
-            },
             "code_input_label": {
               "type": "string"
             },
@@ -1115,7 +1112,6 @@
             "page_title",
             "heading",
             "description",
-            "verified_authentication_app_description",
             "code_input_label",
             "code_input_error_required",
             "code_input_error_expired_code",
@@ -1123,6 +1119,53 @@
             "code_input_error_incorrect_code_length",
             "continue_button",
             "trouble_scanning_link",
+            "choose_another_method_link"
+          ]
+        },
+        "authenticator_app_verify_code_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "code_input_label": {
+              "type": "string"
+            },
+            "code_input_error_required": {
+              "type": "string"
+            },
+            "code_input_error_expired_code": {
+              "type": "string"
+            },
+            "code_input_error_incorrect_code": {
+              "type": "string"
+            },
+            "code_input_error_incorrect_code_length": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "code_input_label",
+            "code_input_error_required",
+            "code_input_error_expired_code",
+            "code_input_error_incorrect_code",
+            "code_input_error_incorrect_code_length",
+            "continue_button",
             "choose_another_method_link"
           ]
         },
@@ -1366,6 +1409,7 @@
         "sign_up_confirm_code_page",
         "authenticator_app_manual_page",
         "authenticator_app_qr_code_page",
+        "authenticator_app_verify_code_page",
         "email_address_verification_email",
         "general_errors",
         "account_not_found_page",
