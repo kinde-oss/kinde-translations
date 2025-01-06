@@ -140,7 +140,7 @@
             "email_input_error_email_in_use"
           ]
         },
-        "secret_page": {
+        "index": {
           "type": "object",
           "properties": {
             "page_title": {
@@ -408,11 +408,20 @@
             "description": {
               "type": "string"
             },
-            "go_back_button": {
+            "back_to_home_button": {
+              "type": "string"
+            },
+            "back_to_sign_in_button": {
               "type": "string"
             }
           },
-          "required": ["page_title", "heading", "description", "go_back_button"]
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "back_to_home_button",
+            "back_to_sign_in_button"
+          ]
         },
         "password_setup_page": {
           "type": "object",
@@ -1225,6 +1234,12 @@
             },
             "invitation_already_accepted": {
               "type": "string"
+            },
+            "back_to_home_button": {
+              "type": "string"
+            },
+            "back_to_sign_in_button": {
+              "type": "string"
             }
           },
           "required": [
@@ -1240,7 +1255,9 @@
             "user_suspended",
             "unknown_error",
             "organization_not_found",
-            "invitation_already_accepted"
+            "invitation_already_accepted",
+            "back_to_home_button",
+            "back_to_sign_in_button"
           ]
         },
         "account_not_found_page": {
@@ -1393,7 +1410,7 @@
         "base_layout",
         "mfa_sms_page",
         "mfa_email_page",
-        "secret_page",
+        "index",
         "sign_in_page",
         "sign_up_page",
         "choose_mfa_method_page",
