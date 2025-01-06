@@ -140,18 +140,6 @@
             "email_input_error_email_in_use"
           ]
         },
-        "auth_error_page": {
-          "type": "object",
-          "properties": {
-            "page_title": {
-              "type": "string"
-            },
-            "heading": {
-              "type": "string"
-            }
-          },
-          "required": ["page_title", "heading"]
-        },
         "secret_page": {
           "type": "object",
           "properties": {
@@ -1199,6 +1187,12 @@
         "general_errors": {
           "type": "object",
           "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
             "account_not_found": {
               "type": "string"
             },
@@ -1225,9 +1219,17 @@
             },
             "unknown_error": {
               "type": "string"
+            },
+            "organization_not_found": {
+              "type": "string"
+            },
+            "invitation_already_accepted": {
+              "type": "string"
             }
           },
           "required": [
+            "page_title",
+            "heading",
             "account_not_found",
             "action_allowed_only_once",
             "no_organization_access",
@@ -1236,7 +1238,9 @@
             "email_domain_not_allowed",
             "invitation_expired",
             "user_suspended",
-            "unknown_error"
+            "unknown_error",
+            "organization_not_found",
+            "invitation_already_accepted"
           ]
         },
         "account_not_found_page": {
@@ -1389,7 +1393,6 @@
         "base_layout",
         "mfa_sms_page",
         "mfa_email_page",
-        "auth_error_page",
         "secret_page",
         "sign_in_page",
         "sign_up_page",
