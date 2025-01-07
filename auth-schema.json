@@ -127,6 +127,9 @@
             },
             "email_input_error_email_in_use": {
               "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
             }
           },
           "required": [
