@@ -788,7 +788,10 @@
             "didnt_receive_a_code_link": {
               "type": "string"
             },
-            "choose_another_method_link": {
+            "description_resent_code": {
+              "type": "string"
+            },
+            "description_warning_too_many_incorrect_attempts": {
               "type": "string"
             }
           },
@@ -805,7 +808,75 @@
             "continue_button",
             "didnt_receive_a_code_description",
             "didnt_receive_a_code_link",
-            "choose_another_method_link"
+            "description_resent_code",
+            "description_warning_too_many_incorrect_attempts"
+          ]
+        },
+        "mfa_use_phone_otp_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "code_input_label": {
+              "type": "string"
+            },
+            "code_input_error_expired_code": {
+              "type": "string"
+            },
+            "code_input_error_incorrect_code": {
+              "type": "string"
+            },
+            "code_input_error_incorrect_code_length": {
+              "type": "string"
+            },
+            "code_input_error_resend_requested_too_soon": {
+              "type": "string"
+            },
+            "confirmation_code_input_error_unknown_error": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "didnt_receive_a_code_description": {
+              "type": "string"
+            },
+            "didnt_receive_a_code_link": {
+              "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
+            },
+            "description_resent_code": {
+              "type": "string"
+            },
+            "description_warning_too_many_incorrect_attempts": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "code_input_label",
+            "code_input_error_expired_code",
+            "code_input_error_incorrect_code",
+            "code_input_error_incorrect_code_length",
+            "code_input_error_resend_requested_too_soon",
+            "confirmation_code_input_error_unknown_error",
+            "continue_button",
+            "didnt_receive_a_code_description",
+            "didnt_receive_a_code_link",
+            "choose_another_method_link",
+            "description_resent_code",
+            "description_warning_too_many_incorrect_attempts"
           ]
         },
         "recovery_code_verify_page": {
@@ -1489,6 +1560,7 @@
         "subscribe_form_widget",
         "password_verify_page",
         "sms_verify_code_page",
+        "mfa_use_phone_otp_page",
         "recovery_code_verify_page",
         "verification_code_sms",
         "choose_organization_page",
