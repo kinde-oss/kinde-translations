@@ -140,7 +140,71 @@
             "email_input_label",
             "email_input_error_required",
             "email_input_error_invalid",
-            "email_input_error_email_in_use"
+            "email_input_error_email_in_use",
+            "choose_another_method_link"
+          ]
+        },
+        "mfa_use_email_code_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "description_resent_code": {
+              "type": "string"
+            },
+            "code_input_label": {
+              "type": "string"
+            },
+            "code_input_error_expired_code": {
+              "type": "string"
+            },
+            "code_input_error_incorrect_code": {
+              "type": "string"
+            },
+            "code_input_error_incorrect_code_length": {
+              "type": "string"
+            },
+            "code_input_error_resend_requested_too_soon": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "didnt_receive_a_code_link": {
+              "type": "string"
+            },
+            "didnt_receive_a_code_description": {
+              "type": "string"
+            },
+            "description_warning_too_many_incorrect_attempts": {
+              "type": "string"
+            },
+            "choose_another_method_link": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "description_resent_code",
+            "code_input_label",
+            "code_input_error_expired_code",
+            "code_input_error_incorrect_code",
+            "code_input_error_incorrect_code_length",
+            "code_input_error_resend_requested_too_soon",
+            "continue_button",
+            "didnt_receive_a_code_link",
+            "didnt_receive_a_code_description",
+            "description_warning_too_many_incorrect_attempts",
+            "choose_another_method_link"
           ]
         },
         "index": {
@@ -902,7 +966,7 @@
             "description": {
               "type": "string"
             },
-            "resent_code": {
+            "description_resent_code": {
               "type": "string"
             },
             "code_input_label": {
@@ -929,7 +993,7 @@
             "didnt_receive_a_code_description": {
               "type": "string"
             },
-            "warning_too_many_incorrect_attempts": {
+            "description_warning_too_many_incorrect_attempts": {
               "type": "string"
             },
             "choose_another_method_link": {
@@ -940,7 +1004,7 @@
             "page_title",
             "heading",
             "description",
-            "resent_code",
+            "description_resent_code",
             "code_input_label",
             "code_input_error_expired_code",
             "code_input_error_incorrect_code",
@@ -949,7 +1013,7 @@
             "continue_button",
             "didnt_receive_a_code_link",
             "didnt_receive_a_code_description",
-            "warning_too_many_incorrect_attempts",
+            "description_warning_too_many_incorrect_attempts",
             "choose_another_method_link"
           ]
         },
@@ -965,13 +1029,13 @@
             "description": {
               "type": "string"
             },
-            "finish_sign_up_code_description": {
+            "description_finish_sign_up": {
               "type": "string"
             },
-            "continue_sign_up_code_description": {
+            "description_continue_sign_up": {
               "type": "string"
             },
-            "resent_code": {
+            "description_resent_code": {
               "type": "string"
             },
             "code_input_label": {
@@ -998,7 +1062,7 @@
             "continue_button": {
               "type": "string"
             },
-            "warning_too_many_incorrect_attempts": {
+            "description_warning_too_many_incorrect_attempts": {
               "type": "string"
             },
             "choose_another_method_link": {
@@ -1009,9 +1073,9 @@
             "page_title",
             "heading",
             "description",
-            "finish_sign_up_code_description",
-            "continue_sign_up_code_description",
-            "resent_code",
+            "description_finish_sign_up",
+            "description_continue_sign_up",
+            "description_resent_code",
             "code_input_label",
             "code_input_error_expired_code",
             "code_input_error_incorrect_code",
@@ -1020,7 +1084,7 @@
             "didnt_receive_a_code_description",
             "didnt_receive_a_code_link",
             "continue_button",
-            "warning_too_many_incorrect_attempts",
+            "description_warning_too_many_incorrect_attempts",
             "choose_another_method_link"
           ]
         },
@@ -1413,6 +1477,7 @@
         "base_layout",
         "mfa_sms_page",
         "mfa_email_page",
+        "mfa_use_email_code_page",
         "index",
         "sign_in_page",
         "sign_up_page",
