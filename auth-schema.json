@@ -281,6 +281,69 @@
             },
             "no_account_link": {
               "type": "string"
+            },
+            "phone_input_label": {
+              "type": "string"
+            },
+            "country_select_label": {
+              "type": "string"
+            },
+            "use_email_link": {
+              "type": "string"
+            },
+            "use_phone_link": {
+              "type": "string"
+            },
+            "phone_input_error_sms_limit_reached": {
+              "type": "string"
+            },
+            "phone_input_error_invalid_country_code": {
+              "type": "string"
+            },
+            "phone_input_error_required": {
+              "type": "string"
+            },
+            "phone_input_error_invalid_format": {
+              "type": "string"
+            },
+            "phone_input_error_no_account_found": {
+              "type": "string"
+            },
+            "username_input_label": {
+              "type": "string"
+            },
+            "username_input_error_required": {
+              "type": "string"
+            },
+            "username_input_error_invalid": {
+              "type": "string"
+            },
+            "username_input_error_no_account_found": {
+              "type": "string"
+            },
+            "username_input_error_invalid_format": {
+              "type": "string"
+            },
+            "username_input_error_already_exists": {
+              "type": "string"
+            },
+            "username_input_error_invalid_length": {
+              "type": "string"
+            },
+            "email_or_username_input_label": {
+              "type": "string"
+            },
+            "email_or_username_error_required": {
+              "type": "string"
+            },
+            "email_or_username_input_error_invalid": {
+              "type": "string"
+            },
+            "use_username_link": {
+              "type": "string"
+            },
+            "use_email_or_username_link": {
+              "type": "string"
             }
           },
           "required": [
@@ -298,7 +361,28 @@
             "continue_with_social_provider_button",
             "continue_with_enterprise_provider_button",
             "no_account_description",
-            "no_account_link"
+            "no_account_link",
+            "phone_input_label",
+            "country_select_label",
+            "use_email_link",
+            "use_phone_link",
+            "phone_input_error_sms_limit_reached",
+            "phone_input_error_invalid_country_code",
+            "phone_input_error_required",
+            "phone_input_error_invalid_format",
+            "phone_input_error_no_account_found",
+            "username_input_label",
+            "username_input_error_required",
+            "username_input_error_invalid",
+            "username_input_error_no_account_found",
+            "username_input_error_invalid_format",
+            "username_input_error_already_exists",
+            "username_input_error_invalid_length",
+            "email_or_username_input_label",
+            "email_or_username_error_required",
+            "email_or_username_input_error_invalid",
+            "use_username_link",
+            "use_email_or_username_link"
           ]
         },
         "sign_up_page": {
@@ -393,6 +477,69 @@
             },
             "kp_usr_is_marketing_opt_in_label": {
               "type": "string"
+            },
+            "phone_input_label": {
+              "type": "string"
+            },
+            "country_select_label": {
+              "type": "string"
+            },
+            "use_email_link": {
+              "type": "string"
+            },
+            "use_phone_link": {
+              "type": "string"
+            },
+            "phone_input_error_sms_limit_reached": {
+              "type": "string"
+            },
+            "phone_input_error_invalid_country_code": {
+              "type": "string"
+            },
+            "phone_input_error_required": {
+              "type": "string"
+            },
+            "phone_input_error_invalid_format": {
+              "type": "string"
+            },
+            "phone_input_error_no_account_found": {
+              "type": "string"
+            },
+            "username_input_label": {
+              "type": "string"
+            },
+            "username_input_error_required": {
+              "type": "string"
+            },
+            "username_input_error_invalid": {
+              "type": "string"
+            },
+            "username_input_error_no_account_found": {
+              "type": "string"
+            },
+            "username_input_error_invalid_format": {
+              "type": "string"
+            },
+            "username_input_error_already_exists": {
+              "type": "string"
+            },
+            "username_input_error_invalid_length": {
+              "type": "string"
+            },
+            "email_or_username_input_label": {
+              "type": "string"
+            },
+            "email_or_username_error_required": {
+              "type": "string"
+            },
+            "email_or_username_input_error_invalid": {
+              "type": "string"
+            },
+            "use_username_link": {
+              "type": "string"
+            },
+            "use_email_or_username_link": {
+              "type": "string"
             }
           },
           "required": [
@@ -425,7 +572,28 @@
             "auth_form_error_terms_not_accepted",
             "auth_form_error_no_auth_methods_enabled",
             "auth_form_error_org_not_accepting_registrations",
-            "kp_usr_is_marketing_opt_in_label"
+            "kp_usr_is_marketing_opt_in_label",
+            "phone_input_label",
+            "country_select_label",
+            "use_email_link",
+            "use_phone_link",
+            "phone_input_error_sms_limit_reached",
+            "phone_input_error_invalid_country_code",
+            "phone_input_error_required",
+            "phone_input_error_invalid_format",
+            "phone_input_error_no_account_found",
+            "username_input_label",
+            "username_input_error_required",
+            "username_input_error_invalid",
+            "username_input_error_no_account_found",
+            "username_input_error_invalid_format",
+            "username_input_error_already_exists",
+            "username_input_error_invalid_length",
+            "email_or_username_input_label",
+            "email_or_username_error_required",
+            "email_or_username_input_error_invalid",
+            "use_username_link",
+            "use_email_or_username_link"
           ]
         },
         "choose_mfa_method_page": {
