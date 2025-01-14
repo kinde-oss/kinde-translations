@@ -1,8 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/kinde-oss/kinde-translations.auth-schema.json",
-  "title": "Kinde auth translations",
-  "description": "A language definition for the authentication flow",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "",
   "type": "object",
   "properties": {
     "spec": {
@@ -1575,6 +1573,9 @@
             "heading": {
               "type": "string"
             },
+            "heading_sign_up": {
+              "type": "string"
+            },
             "description": {
               "type": "string"
             },
@@ -1598,11 +1599,57 @@
             },
             "sign_in_another_way_link": {
               "type": "string"
+            },
+            "password_input_label": {
+              "type": "string"
+            },
+            "password_input_error_too_common": {
+              "type": "string"
+            },
+            "password_input_error_too_short": {
+              "type": "string"
+            },
+            "password_input_error_extra_space": {
+              "type": "string"
+            },
+            "confirm_password_input_label": {
+              "type": "string"
+            },
+            "confirm_password_input_error_mismatch": {
+              "type": "string"
+            },
+            "password_input_error_unknown_error": {
+              "type": "string"
+            },
+            "first_name_input_label": {
+              "type": "string"
+            },
+            "first_name_input_error_required": {
+              "type": "string"
+            },
+            "last_name_input_label": {
+              "type": "string"
+            },
+            "last_name_input_error_required": {
+              "type": "string"
+            },
+            "disclaimer_privacy_link": {
+              "type": "string"
+            },
+            "disclaimer_terms_of_use_link": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_input_label": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_error_required": {
+              "type": "string"
             }
           },
           "required": [
             "page_title",
             "heading",
+            "heading_sign_up",
             "description",
             "description_sign_ups_disabled",
             "description_social",
@@ -1610,7 +1657,22 @@
             "continue_button",
             "back_button",
             "sign_in_another_way_separator",
-            "sign_in_another_way_link"
+            "sign_in_another_way_link",
+            "password_input_label",
+            "password_input_error_too_common",
+            "password_input_error_too_short",
+            "password_input_error_extra_space",
+            "confirm_password_input_label",
+            "confirm_password_input_error_mismatch",
+            "password_input_error_unknown_error",
+            "first_name_input_label",
+            "first_name_input_error_required",
+            "last_name_input_label",
+            "last_name_input_error_required",
+            "disclaimer_privacy_link",
+            "disclaimer_terms_of_use_link",
+            "disclaimer_clickwrap_input_label",
+            "disclaimer_clickwrap_error_required"
           ]
         },
         "phone_number_component": {
