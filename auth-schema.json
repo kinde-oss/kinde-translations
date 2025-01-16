@@ -1484,9 +1484,6 @@
             "email_subject": {
               "type": "string"
             },
-            "email_greeting": {
-              "type": "string"
-            },
             "email_disclaimer": {
               "type": "string"
             }
@@ -1495,7 +1492,6 @@
             "email_body",
             "email_preview",
             "email_subject",
-            "email_greeting",
             "email_disclaimer"
           ]
         },
