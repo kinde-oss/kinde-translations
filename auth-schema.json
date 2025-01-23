@@ -1528,6 +1528,9 @@
             "user_suspended": {
               "type": "string"
             },
+            "login_link_expired": {
+              "type": "string"
+            },
             "unknown_error": {
               "type": "string"
             },
@@ -1553,6 +1556,7 @@
             "operation_not_permitted",
             "invitation_email_mismatch",
             "email_domain_not_allowed",
+            "login_link_expired",
             "invitation_expired",
             "user_suspended",
             "unknown_error",
