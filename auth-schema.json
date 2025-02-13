@@ -344,6 +344,12 @@
             },
             "use_email_or_username_link": {
               "type": "string"
+            },
+            "continue_with_sso_heading": {
+              "type": "string"
+            },
+            "continue_with_sso_description": {
+              "type": "string"
             }
           },
           "required": [
@@ -382,7 +388,9 @@
             "email_or_username_error_required",
             "email_or_username_input_error_invalid",
             "use_username_link",
-            "use_email_or_username_link"
+            "use_email_or_username_link",
+            "continue_with_sso_heading",
+            "continue_with_sso_description"
           ]
         },
         "sign_up_page": {
@@ -455,6 +463,12 @@
               "type": "string"
             },
             "disclaimer_clickwrap_input_label": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_heading": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_description": {
               "type": "string"
             },
             "disclaimer_clickwrap_error_required": {
@@ -540,6 +554,12 @@
             },
             "use_email_or_username_link": {
               "type": "string"
+            },
+            "continue_with_sso_heading": {
+              "type": "string"
+            },
+            "continue_with_sso_description": {
+              "type": "string"
             }
           },
           "required": [
@@ -566,6 +586,8 @@
             "disclaimer_privacy_link",
             "disclaimer_terms_of_use_link",
             "disclaimer_clickwrap_input_label",
+            "disclaimer_clickwrap_heading",
+            "disclaimer_clickwrap_description",
             "disclaimer_clickwrap_error_required",
             "disclaimer_dialog_heading",
             "disclaimer_dialog_description",
@@ -593,7 +615,9 @@
             "email_or_username_error_required",
             "email_or_username_input_error_invalid",
             "use_username_link",
-            "use_email_or_username_link"
+            "use_email_or_username_link",
+            "continue_with_sso_heading",
+            "continue_with_sso_description"
           ]
         },
         "choose_mfa_method_page": {
