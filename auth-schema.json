@@ -549,6 +549,12 @@
             "email_or_username_input_error_invalid": {
               "type": "string"
             },
+            "provide_email_heading": {
+              "type": "string"
+            },
+            "provide_email_description": {
+              "type": "string"
+            },
             "use_username_link": {
               "type": "string"
             },
@@ -614,6 +620,8 @@
             "email_or_username_input_label",
             "email_or_username_error_required",
             "email_or_username_input_error_invalid",
+            "provide_email_heading",
+            "provide_email_description",
             "use_username_link",
             "use_email_or_username_link",
             "continue_with_sso_heading",
