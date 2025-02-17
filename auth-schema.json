@@ -1776,6 +1776,51 @@
           ]
         }
       },
+      "provide_email_page": {
+        "type": "object",
+        "properties": {
+          "continue_with_sso_heading": {
+            "type": "string"
+          },
+          "continue_with_sso_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "continue_with_sso_heading",
+          "continue_with_sso_description"
+        ]
+      },
+      "clickwrap_page": {
+        "type": "object",
+        "properties": {
+          "disclaimer_clickwrap_heading": {
+            "type": "string"
+          },
+          "disclaimer_clickwrap_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "disclaimer_clickwrap_heading",
+          "disclaimer_clickwrap_description"
+        ]
+      },
+      "continue_with_sso_page": {
+        "type": "object",
+        "properties": {
+          "continue_with_sso_heading": {
+            "type": "string"
+          },
+          "continue_with_sso_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "continue_with_sso_heading",
+          "continue_with_sso_description"
+        ]
+      },
       "required": [
         "base_layout",
         "mfa_sms_page",
@@ -1806,7 +1851,10 @@
         "general_errors",
         "account_not_found_page",
         "phone_number_component",
-        "username_component"
+        "username_component",
+        "provide_email_page",
+        "clickwrap_page",
+        "continue_with_sso_page"
       ]
     }
   },
