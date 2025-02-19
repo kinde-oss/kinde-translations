@@ -1830,7 +1830,7 @@
             "credit_powered_by"
           ]
         },
-        "click_wrap_page": {
+        "clickwrap_page": {
           "type": "object",
           "properties": {
             "page_title": {
@@ -1949,7 +1949,7 @@
         "phone_number_component",
         "username_component",
         "provide_email_page",
-        "click_wrap_page",
+        "clickwrap_page",
         "continue_with_sso_page"
       ]
     }
