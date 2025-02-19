@@ -1949,7 +1949,7 @@
         "phone_number_component",
         "username_component",
         "provide_email_page",
-        "clickwrap_page",
+        "click_wrap_page",
         "continue_with_sso_page"
       ]
     }
