@@ -54,7 +54,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | es                    | Spanish                | ✅     |
 | es-419                | Latin American Spanish |
 | es-ES                 | European Spanish       |
-| et                    | Estonian               |
+| et                    | Estonian               | ✅     |
 | eu-ES                 | Basque                 |
 | fa                    | Persian                | ✅     |
 | fi                    | Finnish                |
