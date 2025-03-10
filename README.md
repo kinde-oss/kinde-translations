@@ -65,7 +65,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | gu                    | Gujarati               |
 | he                    | Hebrew                 | ✅     |
 | hi                    | Hindi                  |
-| hr                    | Croatian               |
+| hr                    | Croatian               | ✅     |
 | ht                    | Haitian Creole         | ✅     |
 | hu                    | Hungarian              |
 | hy                    | Armenian               |
