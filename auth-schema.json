@@ -1774,6 +1774,147 @@
             "use_username_link",
             "use_email_or_username_link"
           ]
+        },
+        "continue_with_sso_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "return_to_login_link": {
+              "type": "string"
+            },
+            "email_input_label": {
+              "type": "string"
+            },
+            "email_input_error_invitation_mismatch": {
+              "type": "string"
+            },
+            "email_input_error_invalid": {
+              "type": "string"
+            },
+            "email_input_error_required": {
+              "type": "string"
+            },
+            "email_input_error_saml_sso": {
+              "type": "string"
+            },
+            "email_input_error_no_account_found": {
+              "type": "string"
+            },
+            "credit_powered_by": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "continue_button",
+            "return_to_login_link",
+            "email_input_label",
+            "email_input_error_invitation_mismatch",
+            "email_input_error_invalid",
+            "email_input_error_required",
+            "email_input_error_saml_sso",
+            "email_input_error_no_account_found",
+            "credit_powered_by"
+          ]
+        },
+        "clickwrap_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_input_label": {
+              "type": "string"
+            },
+            "disclaimer_privacy_link": {
+              "type": "string"
+            },
+            "disclaimer_terms_of_use_link": {
+              "type": "string"
+            },
+            "disclaimer_clickwrap_error_required": {
+              "type": "string"
+            },
+            "clickwrap_accepted_error_unknown_error": {
+              "type": "string"
+            },
+            "credit_powered_by": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "continue_button",
+            "disclaimer_clickwrap_input_label",
+            "disclaimer_privacy_link",
+            "disclaimer_terms_of_use_link",
+            "disclaimer_clickwrap_error_required",
+            "clickwrap_accepted_error_unknown_error",
+            "credit_powered_by"
+          ]
+        },
+        "provide_email_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            },
+            "email_input_label": {
+              "type": "string"
+            },
+            "email_input_error_invalid": {
+              "type": "string"
+            },
+            "email_input_error_required": {
+              "type": "string"
+            },
+            "credit_powered_by": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "continue_button",
+            "email_input_label",
+            "email_input_error_invalid",
+            "email_input_error_required",
+            "credit_powered_by"
+          ]
         }
       },
       "required": [
@@ -1806,7 +1947,10 @@
         "general_errors",
         "account_not_found_page",
         "phone_number_component",
-        "username_component"
+        "username_component",
+        "provide_email_page",
+        "clickwrap_page",
+        "continue_with_sso_page"
       ]
     }
   },
