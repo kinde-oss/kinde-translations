@@ -1528,9 +1528,6 @@
             "user_suspended": {
               "type": "string"
             },
-            "login_link_expired": {
-              "type": "string"
-            },
             "unknown_error": {
               "type": "string"
             },
@@ -1545,6 +1542,12 @@
             },
             "back_to_sign_in_button": {
               "type": "string"
+            },
+            "login_link_expired": {
+              "type": "string"
+            },
+            "organization_connection_not_allowed": {
+              "type": "string"
             }
           },
           "required": [
@@ -1556,14 +1559,15 @@
             "operation_not_permitted",
             "invitation_email_mismatch",
             "email_domain_not_allowed",
-            "login_link_expired",
             "invitation_expired",
             "user_suspended",
             "unknown_error",
             "organization_not_found",
             "invitation_already_accepted",
             "back_to_home_button",
-            "back_to_sign_in_button"
+            "back_to_sign_in_button",
+            "login_link_expired",
+            "organization_connection_not_allowed"
           ]
         },
         "account_not_found_page": {
@@ -1915,6 +1919,95 @@
             "email_input_error_required",
             "credit_powered_by"
           ]
+        },
+        "choose_plan_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "usage_label": {
+              "type": "string"
+            },
+            "frequency_monthly": {
+              "type": "string"
+            },
+            "frequency_annual": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "usage_label",
+            "frequency_monthly",
+            "frequency_annual"
+          ]
+        },
+        "subscription_success_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "continue_button": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "description",
+            "continue_button"
+          ]
+        },
+        "collect_payment_details_page": {
+          "type": "object",
+          "properties": {
+            "page_title": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "plan_summary_heading": {
+              "type": "string"
+            },
+            "card_details_heading": {
+              "type": "string"
+            },
+            "usage_label": {
+              "type": "string"
+            },
+            "frequency_monthly": {
+              "type": "string"
+            },
+            "frequency_annual": {
+              "type": "string"
+            },
+            "subscribe_button": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "page_title",
+            "heading",
+            "plan_summary_heading",
+            "card_details_heading",
+            "usage_label",
+            "frequency_monthly",
+            "frequency_annual",
+            "subscribe_button"
+          ]
         }
       },
       "required": [
@@ -1948,9 +2041,12 @@
         "account_not_found_page",
         "phone_number_component",
         "username_component",
-        "provide_email_page",
+        "continue_with_sso_page",
         "clickwrap_page",
-        "continue_with_sso_page"
+        "provide_email_page",
+        "choose_plan_page",
+        "subscription_success_page",
+        "collect_payment_details_page"
       ]
     }
   },
