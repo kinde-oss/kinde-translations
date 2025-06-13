@@ -46,7 +46,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | cy                    | Welsh                  |
 | da                    | Danish                 | ✅     |
 | de                    | German                 | ✅     |
-| el                    | Greek                  |
+| el                    | Greek                  | ✅     |
 | en                    | English                | ✅     |
 | en-AU                 | Australian English     | ✅     |
 | en-GB                 | British English        | ✅     |
