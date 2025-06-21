@@ -1,0 +1,839 @@
+import * as fs from "fs"
+import { execSync } from "child_process"
+import * as path from "path"
+
+// --- Existing Interfaces ---
+interface ChangeDetail {
+  path: string
+  value?: any // For added/deleted
+  oldValue?: any // For updated
+  newValue?: any // For updated
+}
+
+interface JsonDifference {
+  added: ChangeDetail[]
+  updated: ChangeDetail[]
+  deleted: ChangeDetail[]
+}
+// --- End Existing Interfaces ---
+const PLACEHOLDER_REGEX = /\$\{[a-zA-Z0-9_]+\}/g
+// --- New Helper for Pre-processing Placeholders ---
+interface ProcessedText {
+  deeplText: string
+  placeholders: { [key: string]: string } // Map generated ID to original placeholder
+}
+// --- DeepL API Client (as defined above) ---
+interface DeepLTranslateOptions {
+  text: string | string[]
+  target_lang: string
+  source_lang?: string
+  context?: string // DeepL context parameter
+  tag_handling?: string
+  split_sentences?: "on" | "off" | "nonewlines"
+  preserve_formatting?: boolean
+  formality?: "less" | "more" | "prefer_less" | "prefer_more"
+  glossary_id?: string
+  // New: for custom placeholder handling
+  non_splitting_tags?: string[] // Array of tag names or patterns
+  splitting_tags?: string[]
+}
+
+interface DeepLTranslation {
+  detected_source_language: string
+  text: string
+}
+
+interface DeepLResponse {
+  translations: DeepLTranslation[]
+}
+
+class DeepLClient {
+  private apiUrl: string
+  private apiKey: string
+  private nonSplittingTags?: string[] // Store the non-splitting tags
+
+  constructor(
+    apiKey: string,
+    isFreeApi: boolean = true,
+    nonSplittingTags?: string[]
+  ) {
+    this.apiKey = apiKey
+    this.apiUrl = isFreeApi
+      ? "https://api-free.deepl.com/v2/translate"
+      : "https://api.deepl.com/v2/translate"
+    this.nonSplittingTags = nonSplittingTags // Initialize the property
+    if (!apiKey) {
+      throw new Error("DeepL API Key is required.")
+    }
+  }
+
+  async translate(options: DeepLTranslateOptions): Promise<DeepLTranslation[]> {
+    try {
+      const headers = {
+        Authorization: `DeepL-Auth-Key ${this.apiKey}`,
+        "Content-Type": "application/json",
+      }
+
+      const body: any = {
+        text: [options.text],
+        target_lang: options.target_lang,
+        ...(options.source_lang && { source_lang: options.source_lang }),
+        ...(options.context && { context: options.context }),
+        ...(options.tag_handling && { tag_handling: options.tag_handling }),
+        ...(options.split_sentences && {
+          split_sentences: options.split_sentences,
+        }),
+        ...(options.preserve_formatting !== undefined && {
+          preserve_formatting: options.preserve_formatting,
+        }),
+        ...(options.formality && { formality: options.formality }),
+        ...(options.glossary_id && { glossary_id: options.glossary_id }),
+        // Pass the non_splitting_tags from the constructor or options
+        ...(this.nonSplittingTags && {
+          non_splitting_tags: this.nonSplittingTags,
+        }),
+        // You could also allow overriding or combining with options.non_splitting_tags if needed
+        ...(options.non_splitting_tags && {
+          non_splitting_tags: options.non_splitting_tags,
+        }),
+      }
+
+      inDebug && process.stdout.write(JSON.stringify(body) + "\n")
+
+      const response = await fetch(this.apiUrl, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+      })
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: response.statusText }))
+        throw new Error(
+          `DeepL API error: ${response.status} - ${JSON.stringify(errorData)}`
+        )
+      }
+
+      const responseData: DeepLResponse =
+        (await response.json()) as DeepLResponse
+      return responseData.translations
+    } catch (error: any) {
+      inDebug && console.error("DeepL Translation Error:", error.message)
+      throw new Error(`Failed to translate text with DeepL: ${error.message}`)
+    }
+  }
+}
+// --- End DeepL API Client ---
+
+let inDebug = false
+/**
+ * Replaces ${...} placeholders with <x id="N"/> tags for DeepL,
+ * and returns a map to revert them later.
+ */
+function preprocessTextForDeepL(text: string): ProcessedText {
+  let deeplText = text
+  const placeholders: { [key: string]: string } = {}
+  let index = 0
+
+  deeplText = deeplText.replace(PLACEHOLDER_REGEX, (match) => {
+    const id = `var${index++}` // Generate a unique ID for each placeholder
+    placeholders[id] = match // Store original placeholder with ID
+    return `<x id="${id}"/>` // Replace with DeepL-friendly XML tag
+  })
+
+  return { deeplText, placeholders }
+}
+
+/**
+ * Reverts <x id="N"/> tags back to ${...} placeholders using the map generated during preprocessing.
+ */
+function postprocessTextFromDeepL(
+  text: string,
+  placeholders: { [key: string]: string }
+): string {
+  let originalText = text
+  // Regex to find the <x id="N"/> tags generated by preprocessTextForDeepL
+  const DEEPL_PLACEHOLDER_REGEX = /<x id="([^"]+)"\/>/g
+
+  originalText = originalText.replace(DEEPL_PLACEHOLDER_REGEX, (match, id) => {
+    return placeholders[id] || match // Revert to original, or keep tag if ID not found
+  })
+
+  return originalText
+}
+
+/**
+ * Compares two JSON objects and returns the paths and values of added, updated, and deleted values.
+ * This function handles nested objects and arrays.
+ * @param currentObj The current JSON object.
+ * @param previousObj The previous JSON object.
+ * @param currentPath The current path for recursive calls (internal use).
+ * @param differences The object to store differences (internal use).
+ */
+function getJsonDifferences(
+  currentObj: any,
+  previousObj: any,
+  currentPath: string = "",
+  differences: JsonDifference = { added: [], updated: [], deleted: [] }
+): JsonDifference {
+  // (Your existing getJsonDifferences function, unchanged for this request)
+  // Handle added and updated values in currentObj
+  for (const key in currentObj) {
+    const newPath = currentPath ? `${currentPath}.${key}` : key
+    if (Object.prototype.hasOwnProperty.call(currentObj, key)) {
+      if (!Object.prototype.hasOwnProperty.call(previousObj, key)) {
+        // Key is present in current but not in previous (added)
+        differences.added.push({ path: newPath, value: currentObj[key] })
+      } else {
+        // Key is present in both, check for updates
+        const currentValue = currentObj[key]
+        const previousValue = previousObj[key]
+
+        if (
+          typeof currentValue === "object" &&
+          currentValue !== null &&
+          typeof previousValue === "object" &&
+          previousValue !== null &&
+          !Array.isArray(currentValue) &&
+          !Array.isArray(previousValue)
+        ) {
+          // Both are objects, recurse
+          getJsonDifferences(currentValue, previousValue, newPath, differences)
+        } else if (
+          Array.isArray(currentValue) &&
+          Array.isArray(previousValue)
+        ) {
+          if (JSON.stringify(currentValue) !== JSON.stringify(previousValue)) {
+            differences.updated.push({
+              path: newPath,
+              oldValue: previousValue,
+              newValue: currentValue,
+            })
+          }
+        } else if (currentValue !== previousValue) {
+          // Values are different (updated)
+          differences.updated.push({
+            path: newPath,
+            oldValue: previousValue,
+            newValue: currentValue,
+          })
+        }
+      }
+    }
+  }
+
+  // Handle deleted values in previousObj
+  for (const key in previousObj) {
+    const newPath = currentPath ? `${currentPath}.${key}` : key
+    if (Object.prototype.hasOwnProperty.call(previousObj, key)) {
+      if (!Object.prototype.hasOwnProperty.call(currentObj, key)) {
+        // Key is present in previous but not in current (deleted)
+        differences.deleted.push({ path: newPath, value: previousObj[key] })
+      }
+    }
+  }
+  return differences
+}
+
+/**
+ * Retrieves the differences in a JSON file between two specified Git commits.
+ * @param filePath The path to the JSON file.
+ * @param baseCommitSha The SHA of the base commit (e.g., the merge base for a PR).
+ * @param headCommitSha The SHA of the head commit (e.g., the latest commit on the PR branch).
+ * @returns A promise that resolves to an object containing arrays of added, updated, and deleted paths and values.
+ * @throws Error if the file is not a JSON file or Git operations fail.
+ */
+export async function getJsonFileDifferencesBetweenCommits(
+  filePath: string,
+  baseCommitSha: string,
+  headCommitSha: string
+): Promise<JsonDifference> {
+  // (Your existing getJsonFileDifferencesBetweenCommits function, unchanged for this request)
+  const absolutePath = path.resolve(filePath)
+
+  if (!absolutePath.endsWith(".json")) {
+    throw new Error(`File is not a JSON file: ${absolutePath}`)
+  }
+
+  let headContent: string
+  let baseContent: string
+
+  try {
+    headContent = execSync(`git show ${headCommitSha}:"${filePath}"`, {
+      encoding: "utf8",
+      stdio: "pipe",
+    }).trim()
+  } catch (error: any) {
+    if (
+      error.message.includes("fatal: path") ||
+      error.message.includes("exists on disk, but not in")
+    ) {
+      console.warn(
+        `File ${filePath} not found in head commit (${headCommitSha}). Treating as empty.`
+      )
+      headContent = "{}"
+    } else {
+      throw new Error(
+        `Failed to get head file content from Git (${headCommitSha}): ${error.message}`
+      )
+    }
+  }
+
+  try {
+    baseContent = execSync(`git show ${baseCommitSha}:"${filePath}"`, {
+      encoding: "utf8",
+      stdio: "pipe",
+    }).trim()
+  } catch (error: any) {
+    if (
+      error.message.includes("fatal: path") ||
+      error.message.includes("exists on disk, but not in")
+    ) {
+      console.warn(
+        `File ${filePath} not found in base commit (${baseCommitSha}). Treating as empty.`
+      )
+      baseContent = "{}"
+    } else {
+      throw new Error(
+        `Failed to get base file content from Git (${baseCommitSha}): ${error.message}`
+      )
+    }
+  }
+
+  let headJson: any = {}
+  if (headContent) {
+    try {
+      headJson = JSON.parse(headContent)
+    } catch (error) {
+      console.warn(
+        `Failed to parse head JSON content. Treating as empty: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+      headJson = {}
+    }
+  }
+
+  let baseJson: any = {}
+  if (baseContent) {
+    try {
+      baseJson = JSON.parse(baseContent)
+    } catch (error) {
+      console.warn(
+        `Failed to parse base JSON content. Treating as empty: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+      baseJson = {}
+    }
+  }
+
+  const differences = getJsonDifferences(headJson, baseJson)
+
+  return differences
+}
+
+// --- Existing Helper Functions ---
+function getNestedProperty(obj: any, path: string): any | undefined {
+  const parts = path.split(".")
+  let current = obj
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i]
+    if (
+      current === null ||
+      typeof current !== "object" ||
+      !Object.prototype.hasOwnProperty.call(current, part)
+    ) {
+      return undefined
+    }
+    current = current[part]
+  }
+  return current
+}
+
+function setNestedProperty(obj: any, path: string, value: any): void {
+  const parts = path.split(".")
+  let current = obj
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i]
+    if (i === parts.length - 1) {
+      current[part] = value
+    } else {
+      if (
+        current[part] === null ||
+        typeof current[part] !== "object" ||
+        Array.isArray(current[part])
+      ) {
+        current[part] = {}
+      }
+      current = current[part]
+    }
+  }
+}
+
+function deleteNestedProperty(obj: any, path: string): boolean {
+  const parts = path.split(".")
+  let current = obj
+  for (let i = 0; i < parts.length - 1; i++) {
+    const part = parts[i]
+    if (
+      current === null ||
+      typeof current !== "object" ||
+      !Object.prototype.hasOwnProperty.call(current, part)
+    ) {
+      return false
+    }
+    current = current[part]
+  }
+  const lastPart = parts[parts.length - 1]
+  if (Object.prototype.hasOwnProperty.call(current, lastPart)) {
+    delete current[lastPart]
+    return true
+  }
+  return false
+}
+
+// --- New Recursive Translation Function ---
+async function translateJsonValues(
+  obj: any,
+  deeplClient: DeepLClient,
+  targetLanguage: string,
+  currentPathArray: string[] = []
+): Promise<void> {
+  if (typeof obj !== "object" || obj === null) {
+    return
+  }
+
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      await translateJsonValues(obj[i], deeplClient, targetLanguage, [
+        ...currentPathArray,
+        String(i),
+      ])
+    }
+  } else {
+    const contextKey = "translate_context"
+    const keysToProcess = Object.keys(obj)
+
+    for (const key of keysToProcess) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        const value = obj[key]
+        const fullPath = [...currentPathArray, key].join(".")
+
+        if (typeof value === "string" && key !== contextKey) {
+          if (value.trim().length === 0) {
+            console.warn(
+              `Skipping translation for empty/whitespace string at path ${fullPath}. Value: "${value}"`
+            )
+            continue // Skip translation for this value
+          }
+
+          const actualParentOfValue =
+            getNestedProperty(obj, currentPathArray.join(".")) || obj
+          let contextValue: string | undefined
+          if (
+            actualParentOfValue &&
+            typeof actualParentOfValue === "object" &&
+            Object.prototype.hasOwnProperty.call(
+              actualParentOfValue,
+              contextKey
+            )
+          ) {
+            contextValue = String(actualParentOfValue[contextKey])
+          }
+
+          try {
+            inDebug &&
+              process.stdout.write(
+                `Attempting translation for path: ${fullPath}\n`
+              )
+            inDebug &&
+              process.stdout.write(
+                `  Original Value: "${value}" (Type: ${typeof value})\n`
+              )
+            inDebug &&
+              process.stdout.write(`  Context: "${contextValue || "None"}"\n`)
+            // --- NEW: Pre-process the text ---
+            const { deeplText, placeholders } = preprocessTextForDeepL(value)
+            inDebug &&
+              process.stdout.write(`  Preprocessed to: "${deeplText}"\n`)
+
+            const translations = await deeplClient.translate({
+              text: deeplText,
+              target_lang: targetLanguage,
+              ...(contextValue && { context: contextValue }),
+              // non_splitting_tags is passed from the DeepLClient constructor, no need here
+            })
+            if (translations.length > 0) {
+              const translatedValue = postprocessTextFromDeepL(
+                translations[0].text,
+                placeholders
+              )
+              obj[key] = translatedValue
+              inDebug &&
+                process.stdout.write(`Translated "${value}" to "${obj[key]}"\n`)
+            }
+          } catch (e) {
+            const message = `Error translating path ${fullPath}: ${
+              e instanceof Error ? e.message : String(e)
+            }`
+            inDebug && console.error(message)
+            throw new Error(message)
+          }
+        } else if (typeof value === "object" && value !== null) {
+          await translateJsonValues(value, deeplClient, targetLanguage, [
+            ...currentPathArray,
+            key,
+          ])
+        }
+      }
+    }
+  }
+}
+
+// --- Updated Function to apply differences with translation ---
+/**
+ * Applies the given JSON differences (added, updated, deleted) to a target JSON file,
+ * optionally translating new/updated string values.
+ * @param targetFilePath The path to the JSON file to be updated.
+ * @param differences The JsonDifference object containing changes to apply.
+ * @param targetLanguage The language code for DeepL translation (e.g., 'EN-US', 'DE'). Optional.
+ * @param deeplApiKey Your DeepL API key. Required if targetLanguage is provided.
+ * @param isDeepLFreeApi True if using the DeepL Free API (default), false for Pro.
+ * @returns A promise that resolves when the file is updated.
+ * @throws Error if the file cannot be read/parsed or written, or if translation fails without fallback.
+ */
+export async function applyJsonDifferencesToFile(
+  targetFilePath: string,
+  differences: JsonDifference,
+  targetLanguage?: string,
+  deeplApiKey?: string,
+  isDeepLFreeApi: boolean = true,
+  deeplNonSplittingTags?: string[] // New parameter for non_splitting_tags
+): Promise<void> {
+  const absolutePath = path.resolve(targetFilePath)
+  let deeplClient: DeepLClient | undefined
+
+  if (targetLanguage) {
+    if (!deeplApiKey) {
+      throw new Error(
+        "DeepL API Key is required when a target language is specified for translation."
+      )
+    }
+    // Pass nonSplittingTags to the DeepLClient constructor
+    deeplClient = new DeepLClient(
+      deeplApiKey,
+      isDeepLFreeApi,
+      deeplNonSplittingTags
+    )
+  }
+
+  let targetJson: any = {}
+
+  if (fs.existsSync(absolutePath)) {
+    try {
+      const fileContent = fs.readFileSync(absolutePath, "utf8")
+      targetJson = JSON.parse(fileContent)
+    } catch (error) {
+      throw new Error(
+        `Failed to read or parse target JSON file ${absolutePath}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+    }
+  } else {
+    console.warn(
+      `Target file ${absolutePath} not found. Starting with an empty JSON object.`
+    )
+  }
+
+  // Apply deletions first
+  for (const change of differences.deleted) {
+    if (deleteNestedProperty(targetJson, change.path)) {
+      process.stdout.write(`Deleted: ${change.path}\n`)
+    } else {
+      console.warn(
+        `Could not delete: ${change.path} (path not found in target file).`
+      )
+    }
+  }
+
+  // Apply updates
+  for (const change of differences.updated) {
+    if (getNestedProperty(targetJson, change.path) !== undefined) {
+      let newValue = change.newValue
+      if (typeof newValue === "string" && deeplClient) {
+        if (newValue.trim().length === 0) {
+          console.warn(
+            `Skipping translation for empty/whitespace updated string at path ${change.path}. Value: "${newValue}"`
+          )
+          newValue = change.newValue
+        } else {
+          const parts = change.path.split(".")
+          const parentPath = parts.slice(0, -1).join(".")
+          const parentObject = getNestedProperty(targetJson, parentPath)
+
+          let contextValue: string | undefined
+          if (
+            parentObject &&
+            typeof parentObject === "object" &&
+            Object.prototype.hasOwnProperty.call(
+              parentObject,
+              "translate_context"
+            )
+          ) {
+            contextValue = String(parentObject["translate_context"])
+          }
+
+          try {
+            inDebug &&
+              process.stdout.write(
+                `Attempting translation for updated path: ${change.path}\n`
+              )
+            inDebug &&
+              process.stdout.write(
+                `  Original Value: ${JSON.stringify(
+                  newValue
+                )} (Type: ${typeof newValue})\n`
+              )
+            inDebug &&
+              process.stdout.write(`  Context: "${contextValue || "None"}"\n`)
+            const translations = await deeplClient.translate({
+              text: newValue,
+              target_lang: targetLanguage!,
+              ...(contextValue && { context: contextValue }),
+            })
+            if (translations.length > 0) {
+              newValue = translations[0].text
+              inDebug &&
+                process.stdout.write(
+                  `Translated updated value to "${newValue}"\n`
+                )
+            }
+          } catch (e) {
+            const message = `Error translating updated value for ${
+              change.path
+            }: ${e instanceof Error ? e.message : String(e)}`
+            console.error(message)
+            throw new Error(message)
+          }
+        }
+      } else if (
+        typeof newValue === "object" &&
+        newValue !== null &&
+        deeplClient
+      ) {
+        process.stdout.write(
+          `Translating nested object for updated path: ${change.path}\n`
+        )
+        const tempObject = JSON.parse(JSON.stringify(newValue))
+        await translateJsonValues(
+          tempObject,
+          deeplClient,
+          targetLanguage!,
+          change.path.split(".")
+        )
+        newValue = tempObject
+      }
+      setNestedProperty(targetJson, change.path, newValue)
+      process.stdout.write(
+        `Updated: ${change.path} from ${JSON.stringify(
+          change.oldValue
+        )} to ${JSON.stringify(newValue)}`
+      )
+    } else {
+      console.warn(
+        `Could not update: ${change.path} (path not found in target file).`
+      )
+    }
+  }
+
+  // Apply additions
+  for (const change of differences.added) {
+    let addedValue = change.value
+    if (typeof addedValue === "string" && deeplClient) {
+      if (addedValue.trim().length === 0) {
+        console.warn(
+          `Skipping translation for empty/whitespace added string at path ${change.path}. Value: "${addedValue}"`
+        )
+        addedValue = change.value
+      } else {
+        const parts = change.path.split(".")
+        const parentPath = parts.slice(0, -1).join(".")
+        const parentObjectForContext =
+          getNestedProperty(targetJson, parentPath) || {}
+
+        let contextValue: string | undefined
+        if (
+          parentObjectForContext &&
+          typeof parentObjectForContext === "object" &&
+          Object.prototype.hasOwnProperty.call(
+            parentObjectForContext,
+            "translate_context"
+          )
+        ) {
+          contextValue = String(parentObjectForContext["translate_context"])
+        }
+
+        try {
+          process.stdout.write(
+            `Attempting translation for added path: ${change.path}\n`
+          )
+          process.stdout.write(
+            `  Original Value: ${JSON.stringify(
+              addedValue
+            )} (Type: ${typeof addedValue})\n`
+          )
+          process.stdout.write(`  Context: "${contextValue || "None"}"\n`)
+          const translations = await deeplClient.translate({
+            text: addedValue,
+            target_lang: targetLanguage!,
+            ...(contextValue && { context: contextValue }),
+          })
+          if (translations.length > 0) {
+            addedValue = translations[0].text
+            process.stdout.write(`Translated added value to "${addedValue}"\n`)
+          }
+        } catch (e) {
+          const message = `Error translating added value for ${change.path}: ${
+            e instanceof Error ? e.message : String(e)
+          }`
+          console.error(message)
+          throw new Error(message)
+        }
+      }
+    } else if (
+      typeof addedValue === "object" &&
+      addedValue !== null &&
+      deeplClient
+    ) {
+      inDebug &&
+        process.stdout.write(
+          `Translating nested object for added path: ${change.path}`
+        )
+      const tempObject = JSON.parse(JSON.stringify(addedValue))
+      await translateJsonValues(
+        tempObject,
+        deeplClient,
+        targetLanguage!,
+        change.path.split(".")
+      )
+      addedValue = tempObject
+    }
+    setNestedProperty(targetJson, change.path, addedValue)
+    inDebug &&
+      process.stdout.write(
+        `Added: ${change.path} with value ${JSON.stringify(addedValue)}\n`
+      )
+  }
+
+  // Write the modified JSON back to the file
+  try {
+    fs.writeFileSync(absolutePath, JSON.stringify(targetJson, null, 2), "utf8")
+    process.stdout.write(`\t\t✅\n`)
+  } catch (error) {
+    const message = `Failed to write updated JSON to file ${absolutePath}: ${
+      error instanceof Error ? error.message : String(error)
+    }`
+
+    console.error(message)
+    throw new Error(message)
+  }
+}
+
+// Example usage (modified to demonstrate translation):
+/*
+async function runSynchronizationAndTranslationExample() {
+    const sourceFilePath = './source_en.json'; // Original source file
+    const targetFilePath = './target_de.json'; // Target file to be translated to German
+
+    // Mock DeepL API Key (REPLACE WITH YOUR REAL KEY IN PRODUCTION/GHA)
+    const DEEPL_API_KEY = process.env.DEEPL_API_KEY || 'YOUR_DEEPL_API_KEY';
+    if (DEEPL_API_KEY === 'YOUR_DEEPL_API_KEY') {
+        console.warn("WARNING: Using a placeholder DeepL API key. Translation will likely fail. Set DEEPL_API_KEY environment variable.");
+    }
+    const TARGET_LANGUAGE = 'DE'; // Translate to German
+
+    // 1. Create an initial 'source_en.json' (simulating an old commit for diffing)
+    fs.writeFileSync(sourceFilePath, JSON.stringify({
+        "greeting": "Hello world!",
+        "message": "This is a test message.",
+        "button": {
+            "label": "Click me",
+            "tooltip": "Press this button to proceed.",
+            "translate_context": "A button for user interaction"
+        },
+        "errors": {
+            "network": "Network error occurred.",
+            "auth": "Authentication failed. Please try again.",
+            "translate_context": "Error messages displayed to users"
+        },
+        "list": [
+            "Item One",
+            "Item Two",
+            { "nestedText": "Nested item content", "translate_context": "Content of a list item" }
+        ],
+        "untouched": "This should not be touched."
+    }, null, 2));
+
+    // 2. Create the 'target_de.json' (initially empty or existing, will be updated)
+    // Let's start with an empty file for a clear demonstration of additions
+    if (fs.existsSync(targetFilePath)) {
+      fs.unlinkSync(targetFilePath);
+    }
+    process.stdout.write("--- Initial File States ---\n");
+    process.stdout.write("Source.json:\n" + JSON.stringify(fs.readFileSync(sourceFilePath, 'utf8')) + "\n");
+    process.stdout.write("Target.json (before sync):\n" + JSON.stringify(fs.existsSync(targetFilePath) ? fs.readFileSync(targetFilePath, 'utf8') : 'Does not exist') + "\n");
+
+
+    // --- Simulate a 'base' and 'head' content for getJsonDifferences ---
+    // baseContent: Represents the file before changes (e.g., current production version)
+    // headContent: Represents the file after changes (e.g., new PR version)
+
+    const mockBaseSourceContent = {
+        "greeting": "Hello world!",
+        "message": "This is an old test message.", // Will be updated
+        "button": {
+            "label": "Click me",
+            "tooltip": "Press this button to proceed.",
+            "translate_context": "A button for user interaction"
+        },
+        "errors": {
+            "network": "Network error occurred.",
+            "translate_context": "Error messages displayed to users"
+        },
+        "list": [
+            "Item One",
+            "Old Item Two" // Will be updated
+        ],
+        "oldField": "This field will be deleted." // Will be deleted
+    };
+
+    const currentHeadSourceContent = JSON.parse(fs.readFileSync(sourceFilePath, 'utf8'));
+
+    process.stdout.write("\n--- Calculating Differences (as if from Git) ---\n");
+    const differences = getJsonDifferences(currentHeadSourceContent, mockBaseSourceContent);
+    process.stdout.write('Calculated Differences: ' + JSON.stringify(differences, null, 2) + "\n");
+
+
+    // --- Apply these differences to the target file with translation ---
+    process.stdout.write(`\n--- Applying Differences to ${targetFilePath} with translation to ${TARGET_LANGUAGE} ---\n`);
+    try {
+        await applyJsonDifferencesToFile(targetFilePath, differences, TARGET_LANGUAGE, DEEPL_API_KEY);
+        process.stdout.write(`\n--- Final State of ${targetFilePath} ---\n`);
+        process.stdout.write(JSON.stringify(fs.readFileSync(targetFilePath, 'utf8')) + "\n");
+    } catch (error) {
+        console.error('Error during synchronization and translation:', error instanceof Error ? error.message : String(error));
+    }
+
+    // Clean up dummy files
+    fs.unlinkSync(sourceFilePath);
+    if (fs.existsSync(targetFilePath)) {
+      fs.unlinkSync(targetFilePath);
+    }
+}
+
+// Uncomment to run the example
+// runSynchronizationAndTranslationExample();
+*/
