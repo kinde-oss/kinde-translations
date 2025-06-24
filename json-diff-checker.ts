@@ -2,6 +2,8 @@ import * as fs from "fs"
 import { execSync } from "child_process"
 import * as path from "path"
 
+let inDebug = process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development'
+
 // --- Existing Interfaces ---
 interface ChangeDetail {
   path: string
@@ -126,7 +128,6 @@ class DeepLClient {
 }
 // --- End DeepL API Client ---
 
-let inDebug = process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development'
 
 
 function preprocessTextForDeepL(text: string): ProcessedText {
@@ -741,99 +742,3 @@ export async function applyJsonDifferencesToFile(
     throw new Error(message)
   }
 }
-
-// Example usage (modified to demonstrate translation):
-/*
-async function runSynchronizationAndTranslationExample() {
-    const sourceFilePath = './source_en.json'; // Original source file
-    const targetFilePath = './target_de.json'; // Target file to be translated to German
-
-    // Mock DeepL API Key (REPLACE WITH YOUR REAL KEY IN PRODUCTION/GHA)
-    const DEEPL_API_KEY = process.env.DEEPL_API_KEY || 'YOUR_DEEPL_API_KEY';
-    if (DEEPL_API_KEY === 'YOUR_DEEPL_API_KEY') {
-        console.warn("WARNING: Using a placeholder DeepL API key. Translation will likely fail. Set DEEPL_API_KEY environment variable.");
-    }
-    const TARGET_LANGUAGE = 'DE'; // Translate to German
-
-    // 1. Create an initial 'source_en.json' (simulating an old commit for diffing)
-    fs.writeFileSync(sourceFilePath, JSON.stringify({
-        "greeting": "Hello world!",
-        "message": "This is a test message.",
-        "button": {
-            "label": "Click me",
-            "tooltip": "Press this button to proceed.",
-            "translate_context": "A button for user interaction"
-        },
-        "errors": {
-            "network": "Network error occurred.",
-            "auth": "Authentication failed. Please try again.",
-            "translate_context": "Error messages displayed to users"
-        },
-        "list": [
-            "Item One",
-            "Item Two",
-            { "nestedText": "Nested item content", "translate_context": "Content of a list item" }
-        ],
-        "untouched": "This should not be touched."
-    }, null, 2));
-
-    // 2. Create the 'target_de.json' (initially empty or existing, will be updated)
-    // Let's start with an empty file for a clear demonstration of additions
-    if (fs.existsSync(targetFilePath)) {
-      fs.unlinkSync(targetFilePath);
-    }
-    process.stdout.write("--- Initial File States ---\n");
-    process.stdout.write("Source.json:\n" + JSON.stringify(fs.readFileSync(sourceFilePath, 'utf8')) + "\n");
-    process.stdout.write("Target.json (before sync):\n" + JSON.stringify(fs.existsSync(targetFilePath) ? fs.readFileSync(targetFilePath, 'utf8') : 'Does not exist') + "\n");
-
-
-    // --- Simulate a 'base' and 'head' content for getJsonDifferences ---
-    // baseContent: Represents the file before changes (e.g., current production version)
-    // headContent: Represents the file after changes (e.g., new PR version)
-
-    const mockBaseSourceContent = {
-        "greeting": "Hello world!",
-        "message": "This is an old test message.", // Will be updated
-        "button": {
-            "label": "Click me",
-            "tooltip": "Press this button to proceed.",
-            "translate_context": "A button for user interaction"
-        },
-        "errors": {
-            "network": "Network error occurred.",
-            "translate_context": "Error messages displayed to users"
-        },
-        "list": [
-            "Item One",
-            "Old Item Two" // Will be updated
-        ],
-        "oldField": "This field will be deleted." // Will be deleted
-    };
-
-    const currentHeadSourceContent = JSON.parse(fs.readFileSync(sourceFilePath, 'utf8'));
-
-    process.stdout.write("\n--- Calculating Differences (as if from Git) ---\n");
-    const differences = getJsonDifferences(currentHeadSourceContent, mockBaseSourceContent);
-    process.stdout.write('Calculated Differences: ' + JSON.stringify(differences, null, 2) + "\n");
-
-
-    // --- Apply these differences to the target file with translation ---
-    process.stdout.write(`\n--- Applying Differences to ${targetFilePath} with translation to ${TARGET_LANGUAGE} ---\n`);
-    try {
-        await applyJsonDifferencesToFile(targetFilePath, differences, TARGET_LANGUAGE, DEEPL_API_KEY);
-        process.stdout.write(`\n--- Final State of ${targetFilePath} ---\n`);
-        process.stdout.write(JSON.stringify(fs.readFileSync(targetFilePath, 'utf8')) + "\n");
-    } catch (error) {
-        console.error('Error during synchronization and translation:', error instanceof Error ? error.message : String(error));
-    }
-
-    // Clean up dummy files
-    fs.unlinkSync(sourceFilePath);
-    if (fs.existsSync(targetFilePath)) {
-      fs.unlinkSync(targetFilePath);
-    }
-}
-
-// Uncomment to run the example
-// runSynchronizationAndTranslationExample();
-*/
