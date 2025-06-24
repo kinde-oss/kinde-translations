@@ -51,19 +51,23 @@ jobs:
           IS_DEEPL_FREE_API: "false"
           DEEPL_NON_SPLITTING_TAGS: 'regex:\\$\\{[a-zA-Z0-9_]+\\}'
           COMMIT_CHANGES: "true" # Set to 'true' to enable auto-commit/push of translated files
-        run: npx tsx sync-and-translate.ts
+        run: |
+          echo "script-logs<<EOF" >> $GITHUB_OUTPUT
+          npx tsx sync-and-translate.ts >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       # Optional: Add a step to comment on the PR with changes, or post a build status
       - name: Report Translation Status
-        if: always() # Run even if previous steps failed
+        if: always()
         uses: actions/github-script@v6
         with:
           script: |
-             # Example: Get logs from the previous step and comment
-             const logs = context.job.steps.find(s => s.name === 'Run JSON Sync and Translate Script').outputs.stdout;
-             github.rest.issues.createComment({
-               issue_number: context.issue.number,
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               body: `## JSON Translation Sync Results\n\n\`\`\`\n${logs}\n\`\`\``
-             });
+            // Correctly access the output from the step with id 'sync_script'
+            const logs = steps.sync_script.outputs['script-logs'] || 'No output was captured from the script.';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## JSON Translation Sync Results\n\n**Log Output:**\n\n\`\`\`\n${logs}\n\`\`\``
+            });
