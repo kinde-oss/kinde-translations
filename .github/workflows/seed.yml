@@ -39,7 +39,6 @@ jobs:
           npm install # Installs dependencies listed in package.json (including glob, dotenv if used for local testing)
       # npm run build # Runs your TypeScript compilation (e.g., `tsc` or `parcel build`)
       - name: Run JSON Sync and Translate Script
-        id: sync_script
         # All necessary configuration for the script is passed via environment variables.
         # This keeps the script generic and configurable.
         env:
@@ -53,27 +52,10 @@ jobs:
           IS_DEEPL_FREE_API: "false"
           DEEPL_NON_SPLITTING_TAGS: 'regex:\\$\\{[a-zA-Z0-9_]+\\}'
           COMMIT_CHANGES: "true" # Set to 'true' to enable auto-commit/push of translated files
+          # GitHub API environment variables for commenting
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ISSUE_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          echo "script-logs<<EOF" >> $GITHUB_OUTPUT
-          npx tsx sync-and-translate.ts >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      # Optional: Add a step to comment on the PR with changes, or post a build status
-      - name: Report Translation Status
-        if: always()
-        uses: actions/github-script@v6
-        # Add an 'env' block to pass the output into the script's environment
-        env:
-          LOGS_FROM_PREVIOUS_STEP: ${{ steps.sync_script.outputs['script-logs'] }}
-        with:
-          script: |
-            // Now, read the log content from the environment variable
-            const logs = process.env.LOGS_FROM_PREVIOUS_STEP || 'No output was captured from the script.';
-
-            // The rest of the script remains the same
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## JSON Translation Sync Results\n\n**Log Output:**\n\n\`\`\`\n${logs}\n\`\`\``
-            });
+          npx tsx sync-and-translate.ts

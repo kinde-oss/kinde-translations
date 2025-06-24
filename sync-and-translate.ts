@@ -5,6 +5,7 @@ import {
 const { glob } = require("glob")
 const path = require("path")
 const { execSync } = require("child_process") // Needed if you want to commit/push changes
+const { Octokit } = require("@octokit/rest") // Add GitHub API client
 require("dotenv").config()
 
 async function run() {
@@ -24,14 +25,27 @@ async function run() {
       ? deeplNonSplittingTagsStr.split(",")
       : undefined
 
-    process.stdout.write("Source File Path: " + sourceFilePath + "\n");
-    process.stdout.write(
-      "Target JSON Glob Pattern: " + targetJsonGlobPattern + "\n"
-    )
-    process.stdout.write("Base Commit SHA: " + baseSha + "\n")
-    process.stdout.write("Head Commit SHA: " + headSha + "\n")
-    process.stdout.write("Git Branch Name: " + gitBranchName + "\n")
-    process.stdout.write("DeepL API Key: " + !!deeplApiKey ? 'Set' : 'unset' + "\n")
+    // GitHub API setup
+    const githubToken = process.env.GITHUB_TOKEN
+    const octokit = githubToken ? new Octokit({ auth: githubToken }) : null
+    const repoOwner = process.env.GITHUB_REPOSITORY_OWNER
+    const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
+    const issueNumber = process.env.GITHUB_ISSUE_NUMBER
+
+    // Capture logs for the comment
+    const logs: string[] = []
+
+    const log = (message: string) => {
+      process.stdout.write(message + "\n")
+      logs.push(message)
+    }
+
+    log("Source File Path: " + sourceFilePath)
+    log("Target JSON Glob Pattern: " + targetJsonGlobPattern)
+    log("Base Commit SHA: " + baseSha)
+    log("Head Commit SHA: " + headSha)
+    log("Git Branch Name: " + gitBranchName)
+    log("DeepL API Key: " + (!!deeplApiKey ? 'Set' : 'unset'))
 
     console.log(
       !sourceFilePath,
@@ -41,7 +55,6 @@ async function run() {
       !deeplApiKey, deeplApiKey?.substring(0, 5) + '...',
       (commitChanges && !gitBranchName)
     )
-
 
     if (
       !sourceFilePath ||
@@ -57,20 +70,16 @@ async function run() {
     }
 
     // 2. Calculate differences from the source file's history
-    process.stdout.write("Calculating differences...\n")
+    log("Calculating differences...")
     const differences = await getJsonFileDifferencesBetweenCommits(
       sourceFilePath,
       baseSha,
       headSha
     )
-    process.stdout.write(
-      "Calculated Differences: " + JSON.stringify(differences, null, 2) + "\n"
-    )
+    log("Calculated Differences: " + JSON.stringify(differences, null, 2))
 
     // 3. Resolve glob pattern to a list of target files
-    process.stdout.write(
-      `Searching for target files with pattern: ${targetJsonGlobPattern}\n`
-    )
+    log(`Searching for target files with pattern: ${targetJsonGlobPattern}`)
     let targetFiles: string[] = await glob(targetJsonGlobPattern)
 
     const excludedLanguageCodes = [
@@ -93,19 +102,11 @@ async function run() {
     })
 
     if (targetFiles.length === 0) {
-      console.warn(
-        "No target JSON files found matching the glob pattern and exclusion. No files will be updated."
-      )
+      log("No target JSON files found matching the glob pattern and exclusion. No files will be updated.")
       return
     }
 
-    
-
-    process.stdout.write(
-      "Found target files: " +
-        targetFiles.map((file) => file.split("/")[0]).join(", ") +
-        "\n"
-    )
+    log("Found target files: " + targetFiles.map((file) => file.split("/")[0]).join(", "))
 
     let filesModified: string[] = []
     let filesErrored: string[] = []
@@ -121,9 +122,7 @@ async function run() {
           break
       }
 
-      process.stdout.write(
-        `➡️ Updating ${targetLangCode} ...`
-      )
+      log(`➡️ Updating ${targetLangCode} ...`)
       try {
         // Pass the non-splitting tags to applyJsonDifferencesToFile
         await applyJsonDifferencesToFile(
@@ -136,26 +135,24 @@ async function run() {
         )
         filesModified.push(targetFilePath)
       } catch (error) {
-        console.error(
-          `❌ \n\tError processing ${targetFilePath}: ${(error as Error).message}`
-        )
+        const errorMsg = `❌ \n\tError processing ${targetFilePath}: ${(error as Error).message}`
+        console.error(errorMsg)
+        log(errorMsg)
         filesErrored.push(targetFilePath)
       }
     }
 
-    process.stdout.write(
-      "All target files synchronization and translation attempt complete!\n"
-    )
+    log("All target files synchronization and translation attempt complete!")
 
     // 5. Optional: Commit and push changes if enabled
     if (commitChanges && filesModified.length > 0) {
-      process.stdout.write("Committing and pushing translated files...\n")
+      log("Committing and pushing translated files...")
       execSync('git config user.name "github-actions[bot]"')
       execSync(
         'git config user.email "github-actions[bot]@users.noreply.github.com"'
       )
 
-      process.stdout.write("checkout: " + gitBranchName + "\n")
+      log("checkout: " + gitBranchName)
       execSync(`git checkout ${gitBranchName}`)
 
       for (const filePath of filesModified) {
@@ -164,32 +161,64 @@ async function run() {
 
       try {
         execSync("git diff-index --quiet HEAD --")
-        process.stdout.write("No actual changes detected to commit.\n")
+        log("No actual changes detected to commit.")
       } catch (e) {
         try {
           execSync('git commit -m "chore: Auto-translate JSON files"')
           execSync("git push")
-          process.stdout.write(
-            "Successfully committed and pushed translated files.\n"
-          )
+          log("Successfully committed and pushed translated files.")
         } catch (commitPushError) {
-          console.error(
-            `Failed to commit or push changes: ${
-              (commitPushError as Error).message
-            }`
-          )
+          const errorMsg = `Failed to commit or push changes: ${(commitPushError as Error).message}`
+          console.error(errorMsg)
+          log(errorMsg)
           throw new Error(
             `Git commit/push failed: ${(commitPushError as Error).message}`
           )
         }
       }
     } else if (commitChanges && filesModified.length === 0) {
-      process.stdout.write(
-        "Commit changes enabled, but no files were modified.\n"
-      )
+      log("Commit changes enabled, but no files were modified.")
     }
+
+    // 6. Post comment to GitHub PR if we have the necessary information
+    if (octokit && repoOwner && repoName && issueNumber) {
+      try {
+        const commentBody = `## JSON Translation Sync Results
+
+**Summary:**
+- Files modified: ${filesModified.length}
+- Files with errors: ${filesErrored.length}
+- Total target files processed: ${targetFiles.length}
+
+**Modified Files:**
+${filesModified.length > 0 ? filesModified.map(f => `- \`${f}\``).join('\n') : 'None'}
+
+**Files with Errors:**
+${filesErrored.length > 0 ? filesErrored.map(f => `- \`${f}\``).join('\n') : 'None'}
+
+**Log Output:**
+\`\`\`
+${logs.join('\n')}
+\`\`\``
+
+        await octokit.rest.issues.createComment({
+          owner: repoOwner,
+          repo: repoName,
+          issue_number: parseInt(issueNumber),
+          body: commentBody
+        })
+        log("Successfully posted comment to GitHub PR")
+      } catch (commentError) {
+        console.error(`Failed to post comment to GitHub: ${(commentError as Error).message}`)
+        log(`Failed to post comment to GitHub: ${(commentError as Error).message}`)
+      }
+    } else {
+      log("Skipping GitHub comment - missing required environment variables (GITHUB_TOKEN, GITHUB_REPOSITORY_OWNER, GITHUB_REPOSITORY, or GITHUB_ISSUE_NUMBER)")
+    }
+
   } catch (error) {
-    console.error("Workflow Script Error:", (error as Error).message)
+    const errorMsg = "Workflow Script Error: " + (error as Error).message
+    console.error(errorMsg)
     process.exit(1)
   }
 }
