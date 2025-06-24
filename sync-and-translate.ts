@@ -8,6 +8,8 @@ const { execSync } = require("child_process") // Needed if you want to commit/pu
 const { Octokit } = require("@octokit/rest") // Add GitHub API client
 require("dotenv").config()
 
+let inDebug = process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development'
+
 async function run() {
   // Initialize variables that need to be accessible in the finally block
   let logs: string[] = []
@@ -47,21 +49,14 @@ async function run() {
     repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
     issueNumber = process.env.GITHUB_ISSUE_NUMBER
 
-    log("Source File Path: " + sourceFilePath)
-    log("Target JSON Glob Pattern: " + targetJsonGlobPattern)
-    log("Base Commit SHA: " + baseSha)
-    log("Head Commit SHA: " + headSha)
-    log("Git Branch Name: " + gitBranchName)
-    log("DeepL API Key: " + (!!deeplApiKey ? 'Set' : 'unset'))
-
-    console.log(
-      !sourceFilePath,
-      !targetJsonGlobPattern,
-      !baseSha,
-      !headSha,
-      !deeplApiKey, deeplApiKey?.substring(0, 5) + '...',
-      (commitChanges && !gitBranchName)
-    )
+    if (inDebug) {
+      log("Source File Path: " + sourceFilePath)
+      log("Target JSON Glob Pattern: " + targetJsonGlobPattern)
+      log("Base Commit SHA: " + baseSha)
+      log("Head Commit SHA: " + headSha)
+      log("Git Branch Name: " + gitBranchName)
+      log("DeepL API Key: " + (deeplApiKey ? 'Set' : 'unset'))
+    }
 
     if (
       !sourceFilePath ||

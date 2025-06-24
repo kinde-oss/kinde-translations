@@ -126,20 +126,18 @@ class DeepLClient {
 }
 // --- End DeepL API Client ---
 
-let inDebug = false
-/**
- * Replaces ${...} placeholders with <x id="N"/> tags for DeepL,
- * and returns a map to revert them later.
- */
+let inDebug = process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development'
+
+
 function preprocessTextForDeepL(text: string): ProcessedText {
   let deeplText = text
   const placeholders: { [key: string]: string } = {}
   let index = 0
 
   deeplText = deeplText.replace(PLACEHOLDER_REGEX, (match) => {
-    const id = `var${index++}` // Generate a unique ID for each placeholder
-    placeholders[id] = match // Store original placeholder with ID
-    return `<x id="${id}"/>` // Replace with DeepL-friendly XML tag
+    const id = `var${index++}`
+    placeholders[id] = match 
+    return `<x id="${id}"/>`
   })
 
   return { deeplText, placeholders }
@@ -600,12 +598,13 @@ export async function applyJsonDifferencesToFile(
             inDebug &&
               process.stdout.write(`  Context: "${contextValue || "None"}"\n`)
             const translations = await deeplClient.translate({
-              text: newValue,
+              text: preprocessTextForDeepL(newValue).deeplText,
               target_lang: targetLanguage!,
               ...(contextValue && { context: contextValue }),
             })
             if (translations.length > 0) {
-              newValue = translations[0].text
+              const { deeplText, placeholders } = preprocessTextForDeepL(newValue)
+ newValue = postprocessTextFromDeepL(translations[0].text, placeholders)
               inDebug &&
                 process.stdout.write(
                   `Translated updated value to "${newValue}"\n`
@@ -687,12 +686,13 @@ export async function applyJsonDifferencesToFile(
           )
           process.stdout.write(`  Context: "${contextValue || "None"}"\n`)
           const translations = await deeplClient.translate({
-            text: addedValue,
+            text: preprocessTextForDeepL(addedValue).deeplText,
             target_lang: targetLanguage!,
             ...(contextValue && { context: contextValue }),
           })
           if (translations.length > 0) {
-            addedValue = translations[0].text
+            const { deeplText, placeholders } = preprocessTextForDeepL(addedValue)
+            addedValue = postprocessTextFromDeepL(translations[0].text, placeholders)
             process.stdout.write(`Translated added value to "${addedValue}"\n`)
           }
         } catch (e) {

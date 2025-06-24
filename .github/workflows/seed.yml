@@ -53,7 +53,7 @@ jobs:
           DEEPL_NON_SPLITTING_TAGS: 'regex:\\$\\{[a-zA-Z0-9_]+\\}'
           COMMIT_CHANGES: "true" # Set to 'true' to enable auto-commit/push of translated files
           # GitHub API environment variables for commenting
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PR_PAT }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_ISSUE_NUMBER: ${{ github.event.pull_request.number }}
