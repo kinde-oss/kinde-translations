@@ -9,6 +9,21 @@ const { Octokit } = require("@octokit/rest") // Add GitHub API client
 require("dotenv").config()
 
 async function run() {
+  // Initialize variables that need to be accessible in the finally block
+  let logs: string[] = []
+  let filesModified: string[] = []
+  let filesErrored: string[] = []
+  let targetFiles: string[] = []
+  let octokit: any = null
+  let repoOwner: string | undefined
+  let repoName: string | undefined
+  let issueNumber: string | undefined
+
+  const log = (message: string) => {
+    process.stdout.write(message + "\n")
+    logs.push(message)
+  }
+
   try {
     // 1. Get environment variables
     const sourceFilePath = process.env.SOURCE_JSON_FILE_PATH
@@ -27,18 +42,10 @@ async function run() {
 
     // GitHub API setup
     const githubToken = process.env.GITHUB_TOKEN
-    const octokit = githubToken ? new Octokit({ auth: githubToken }) : null
-    const repoOwner = process.env.GITHUB_REPOSITORY_OWNER
-    const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
-    const issueNumber = process.env.GITHUB_ISSUE_NUMBER
-
-    // Capture logs for the comment
-    const logs: string[] = []
-
-    const log = (message: string) => {
-      process.stdout.write(message + "\n")
-      logs.push(message)
-    }
+    octokit = githubToken ? new Octokit({ auth: githubToken }) : null
+    repoOwner = process.env.GITHUB_REPOSITORY_OWNER
+    repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
+    issueNumber = process.env.GITHUB_ISSUE_NUMBER
 
     log("Source File Path: " + sourceFilePath)
     log("Target JSON Glob Pattern: " + targetJsonGlobPattern)
@@ -80,7 +87,7 @@ async function run() {
 
     // 3. Resolve glob pattern to a list of target files
     log(`Searching for target files with pattern: ${targetJsonGlobPattern}`)
-    let targetFiles: string[] = await glob(targetJsonGlobPattern)
+    targetFiles = await glob(targetJsonGlobPattern)
 
     const excludedLanguageCodes = [
       "sr",
@@ -107,9 +114,6 @@ async function run() {
     }
 
     log("Found target files: " + targetFiles.map((file) => file.split("/")[0]).join(", "))
-
-    let filesModified: string[] = []
-    let filesErrored: string[] = []
 
     // 4. Iterate through each target file and apply differences with translation
     for (const targetFilePath of targetFiles) {
@@ -180,6 +184,12 @@ async function run() {
       log("Commit changes enabled, but no files were modified.")
     }
 
+  } catch (error) {
+    const errorMsg = "Workflow Script Error: " + (error as Error).message
+    console.error(errorMsg)
+    log(errorMsg)
+    // Don't exit here - let the finally block handle the comment
+  } finally {
     // 6. Post comment to GitHub PR if we have the necessary information
     if (octokit && repoOwner && repoName && issueNumber) {
       try {
@@ -215,11 +225,6 @@ ${logs.join('\n')}
     } else {
       log("Skipping GitHub comment - missing required environment variables (GITHUB_TOKEN, GITHUB_REPOSITORY_OWNER, GITHUB_REPOSITORY, or GITHUB_ISSUE_NUMBER)")
     }
-
-  } catch (error) {
-    const errorMsg = "Workflow Script Error: " + (error as Error).message
-    console.error(errorMsg)
-    process.exit(1)
   }
 }
 
