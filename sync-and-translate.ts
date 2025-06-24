@@ -64,7 +64,7 @@ async function run() {
       !baseSha ||
       !headSha ||
       !deeplApiKey ||
-      !(commitChanges && !gitBranchName)
+      (commitChanges && !gitBranchName)
     ) {
       throw new Error(
         "Missing required environment variables. Ensure SOURCE_JSON_FILE_PATH, TARGET_JSON_GLOB_PATTERN, BASE_COMMIT_SHA, HEAD_COMMIT_SHA, and DEEPL_API_KEY are set."
