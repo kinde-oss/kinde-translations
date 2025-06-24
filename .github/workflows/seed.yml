@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: write # Allows writing to the repository (for git add, commit, push)
       pull-requests: write # Allows commenting on PRs (if you add logic for that later)
+      issues: write
       # Other permissions default to 'none' if not explicitly listed
 
     steps:
