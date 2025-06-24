@@ -1,0 +1,61 @@
+# .github/workflows/json-sync.yml
+
+name: JSON Sync and Translate Multi-Target
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] # Trigger on PR creation, new commits, or reopening
+
+jobs:
+  sync-and-translate:
+    runs-on: ubuntu-latest
+
+    # Granular permissions for the GITHUB_TOKEN
+    # This is important for security to follow the principle of least privilege.
+    # 'contents: write' is needed for the script to be able to commit and push changes.
+    # If you only want to check and report, change 'contents: write' to 'contents: read'.
+    permissions:
+      contents: write # Allows writing to the repository (for git add, commit, push)
+      pull-requests: write # Allows commenting on PRs (if you add logic for that later)
+      issues: write
+      # Other permissions default to 'none' if not explicitly listed
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history. This is crucial for `git show <SHA>` commands
+          # to get content from arbitrary commits (base and head SHAs).
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20" # Recommended to use LTS (Long Term Support) versions, currently Node.js 20 or 22
+          cache: "npm" # Caches npm dependencies to speed up subsequent runs
+
+      - name: Install dependencies and Build
+        run: |
+          npm install # Installs dependencies listed in package.json (including glob, dotenv if used for local testing)
+      # npm run build # Runs your TypeScript compilation (e.g., `tsc` or `parcel build`)
+      - name: Run JSON Sync and Translate Script
+        # All necessary configuration for the script is passed via environment variables.
+        # This keeps the script generic and configurable.
+        env:
+          # Git Commit SHAs for comparison
+          BASE_COMMIT_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+          GIT_BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          SOURCE_JSON_FILE_PATH: "./en/auth.json" # Adjust to your primary source JSON file path
+          TARGET_JSON_GLOB_PATTERN: "./**/auth.json"
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+          IS_DEEPL_FREE_API: "false"
+          DEEPL_NON_SPLITTING_TAGS: 'regex:\\$\\{[a-zA-Z0-9_]+\\}'
+          COMMIT_CHANGES: "true" # Set to 'true' to enable auto-commit/push of translated files
+          # GitHub API environment variables for commenting
+          GITHUB_TOKEN: ${{ secrets.PR_PAT }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ISSUE_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          npx tsx sync-and-translate.ts

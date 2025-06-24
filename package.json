@@ -22,6 +22,7 @@
     "translations"
   ],
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.10",
     "prettier": "^3.0.3"
@@ -39,5 +40,11 @@
   },
   "lint-staged": {
     "*.{js,json,md}": "prettier --write"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "@types/glob": "^8.1.0",
+    "dotenv": "^16.5.0",
+    "glob": "^11.0.3"
   }
 }
