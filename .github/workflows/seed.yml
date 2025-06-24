@@ -38,6 +38,7 @@ jobs:
           npm install # Installs dependencies listed in package.json (including glob, dotenv if used for local testing)
       # npm run build # Runs your TypeScript compilation (e.g., `tsc` or `parcel build`)
       - name: Run JSON Sync and Translate Script
+        id: sync_script
         # All necessary configuration for the script is passed via environment variables.
         # This keeps the script generic and configurable.
         env:
