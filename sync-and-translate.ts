@@ -33,6 +33,15 @@ async function run() {
     process.stdout.write("Git Branch Name: " + gitBranchName + "\n")
     process.stdout.write("DeepL API Key: " + !!deeplApiKey ? 'Set' : 'unset' + "\n")
 
+    console.log(
+      !sourceFilePath,
+      !targetJsonGlobPattern,
+      !baseSha,
+      !headSha,
+      !deeplApiKey,
+      (commitChanges && !gitBranchName)
+    )
+
 
     if (
       !sourceFilePath ||
