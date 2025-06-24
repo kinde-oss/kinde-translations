@@ -38,7 +38,7 @@ async function run() {
       !targetJsonGlobPattern,
       !baseSha,
       !headSha,
-      !deeplApiKey,
+      !deeplApiKey, deeplApiKey?.substring(0, 5) + '...',
       (commitChanges && !gitBranchName)
     )
 
