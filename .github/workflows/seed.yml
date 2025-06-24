@@ -54,16 +54,16 @@ jobs:
         run: npx tsx sync-and-translate.ts
 
       # Optional: Add a step to comment on the PR with changes, or post a build status
-      # - name: Report Translation Status
-      #   if: always() # Run even if previous steps failed
-      #   uses: actions/github-script@v6
-      #   with:
-      #     script: |
-      #       # Example: Get logs from the previous step and comment
-      #       const logs = context.job.steps.find(s => s.name === 'Run JSON Sync and Translate Script').outputs.stdout;
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: `## JSON Translation Sync Results\n\n\`\`\`\n${logs}\n\`\`\``
-      #       });
+      - name: Report Translation Status
+        if: always() # Run even if previous steps failed
+        uses: actions/github-script@v6
+        with:
+          script: |
+             # Example: Get logs from the previous step and comment
+             const logs = context.job.steps.find(s => s.name === 'Run JSON Sync and Translate Script').outputs.stdout;
+             github.rest.issues.createComment({
+               issue_number: context.issue.number,
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               body: `## JSON Translation Sync Results\n\n\`\`\`\n${logs}\n\`\`\``
+             });
