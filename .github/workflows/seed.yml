@@ -61,11 +61,15 @@ jobs:
       - name: Report Translation Status
         if: always()
         uses: actions/github-script@v6
+        # Add an 'env' block to pass the output into the script's environment
+        env:
+          LOGS_FROM_PREVIOUS_STEP: ${{ steps.sync_script.outputs['script-logs'] }}
         with:
           script: |
-            // Correctly access the output from the step with id 'sync_script'
-            const logs = steps.sync_script.outputs['script-logs'] || 'No output was captured from the script.';
+            // Now, read the log content from the environment variable
+            const logs = process.env.LOGS_FROM_PREVIOUS_STEP || 'No output was captured from the script.';
 
+            // The rest of the script remains the same
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
