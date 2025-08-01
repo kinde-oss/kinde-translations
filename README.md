@@ -80,7 +80,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | ko                    | Korean                 | ✅     |
 | ky                    | Kyrgyz                 |
 | lo                    | Lao                    |
-| lt                    | Lithuanian             |
+| lt                    | Lithuanian             | ✅     |
 | lv                    | Latvian                | ✅     |
 | mk                    | Macedonian             |
 | ml                    | Malayalam              |
@@ -102,7 +102,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | ro                    | Romanian               | ✅     |
 | ru                    | Russian                | ✅     |
 | si                    | Sinhala                |
-| sk                    | Slovak                 | ✅
+| sk                    | Slovak                 | ✅     |
 | sl                    | Slovenian              |
 | sq                    | Albanian               |
 | sr                    | Serbian                | ✅     |
