@@ -176,9 +176,13 @@ function getJsonDifferences(
   currentPath: string = "",
   differences: JsonDifference = { added: [], updated: [], deleted: [] }
 ): JsonDifference {
-  // (Your existing getJsonDifferences function, unchanged for this request)
   // Handle added and updated values in currentObj
   for (const key in currentObj) {
+    // Skip translate_context key
+    if (key === "translate_context") {
+      continue
+    }
+
     const newPath = currentPath ? `${currentPath}.${key}` : key
     if (Object.prototype.hasOwnProperty.call(currentObj, key)) {
       if (!Object.prototype.hasOwnProperty.call(previousObj, key)) {
@@ -224,6 +228,11 @@ function getJsonDifferences(
 
   // Handle deleted values in previousObj
   for (const key in previousObj) {
+    // Skip translate_context key
+    if (key === "translate_context") {
+      continue
+    }
+
     const newPath = currentPath ? `${currentPath}.${key}` : key
     if (Object.prototype.hasOwnProperty.call(previousObj, key)) {
       if (!Object.prototype.hasOwnProperty.call(currentObj, key)) {
