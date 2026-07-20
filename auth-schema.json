@@ -1543,6 +1543,9 @@
             "back_to_sign_in_button": {
               "type": "string"
             },
+            "cookies_required": {
+              "type": "string"
+            },
             "login_link_expired": {
               "type": "string"
             },
