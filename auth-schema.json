@@ -617,6 +617,12 @@
             "email_button": {
               "type": "string"
             },
+            "lost_your_device_description": {
+              "type": "string"
+            },
+            "lost_your_device_link": {
+              "type": "string"
+            },
             "do_not_use_mfa_link": {
               "type": "string"
             }
