@@ -2017,6 +2017,62 @@
             "frequency_annual",
             "subscribe_button"
           ]
+        },
+        "edit_billing_information_page": {
+          "type": "object",
+          "properties": {
+            "heading": {
+              "type": "string"
+            },
+            "email_input_label": {
+              "type": "string"
+            },
+            "address_legend": {
+              "type": "string"
+            },
+            "country_input_label": {
+              "type": "string"
+            },
+            "address_line_1_input_label": {
+              "type": "string"
+            },
+            "address_line_2_input_label": {
+              "type": "string"
+            },
+            "city_input_label": {
+              "type": "string"
+            },
+            "state_input_label": {
+              "type": "string"
+            },
+            "postal_code_input_label": {
+              "type": "string"
+            },
+            "tax_id_legend": {
+              "type": "string"
+            },
+            "tax_id_helper_text": {
+              "type": "string"
+            },
+            "tax_id_type_input_label": {
+              "type": "string"
+            },
+            "tax_id_number_input_label": {
+              "type": "string"
+            },
+            "tax_id_type_empty_option": {
+              "type": "string"
+            },
+            "add_another_id_button": {
+              "type": "string"
+            },
+            "remove_tax_id_button": {
+              "type": "string"
+            },
+            "save_button": {
+              "type": "string"
+            }
+          }
         }
       },
       "required": [
