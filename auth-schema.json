@@ -2071,6 +2071,21 @@
             },
             "save_button": {
               "type": "string"
+            },
+            "card_heading": {
+              "type": "string"
+            },
+            "edit_button": {
+              "type": "string"
+            },
+            "email_label": {
+              "type": "string"
+            },
+            "address_label": {
+              "type": "string"
+            },
+            "tax_id_label": {
+              "type": "string"
             }
           }
         }
