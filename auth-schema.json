@@ -119,6 +119,12 @@
             "email_input_label": {
               "type": "string"
             },
+            "phone_input_label": {
+              "type": "string"
+            },
+            "description_input_label": {
+              "type": "string"
+            },
             "email_input_error_required": {
               "type": "string"
             },
@@ -2079,6 +2085,12 @@
               "type": "string"
             },
             "email_label": {
+              "type": "string"
+            },
+            "phone_label": {
+              "type": "string"
+            },
+            "description_label": {
               "type": "string"
             },
             "address_label": {
