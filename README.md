@@ -37,7 +37,7 @@ Where you see ${some_text} this is variable text our system automatically genera
 | am                    | Amharic                |
 | ar                    | Arabic                 |
 | ar-001                | Modern Standard Arabic | ✅     |
-| az                    | Azerbaijani            |
+| az                    | Azerbaijani            | ✅     |
 | bg                    | Bulgarian              |
 | bn                    | Bangla                 |
 | bs                    | Bosnian                |
