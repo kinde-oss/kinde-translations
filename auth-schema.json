@@ -2100,6 +2100,17 @@
               "type": "string"
             }
           }
+        },
+        "payment_details_page": {
+          "type": "object",
+          "properties": {
+            "adding_payment_method_banner": {
+              "type": "string"
+            },
+            "billing_sync_pending_banner": {
+              "type": "string"
+            }
+          }
         }
       },
       "required": [
