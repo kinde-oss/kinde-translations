@@ -27,6 +27,8 @@ jobs:
           # Fetch full history. This is crucial for `git show <SHA>` commands
           # to get content from arbitrary commits (base and head SHAs).
           fetch-depth: 0
+          # Commit translations onto the PR branch, not the merge ref.
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -51,9 +53,10 @@ jobs:
           DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
           IS_DEEPL_FREE_API: "false"
           DEEPL_NON_SPLITTING_TAGS: 'regex:\\$\\{[a-zA-Z0-9_]+\\}'
-          COMMIT_CHANGES: "true" # Set to 'true' to enable auto-commit/push of translated files
-          # GitHub API environment variables for commenting
-          GITHUB_TOKEN: ${{ secrets.PR_PAT }}
+          COMMIT_CHANGES: "true" # Set to 'true' to enable auto-commit of translated files
+          # github.token creates a verified github-actions[bot] commit via the Git API.
+          # A PAT git commit is unsigned and is rejected by the signing ruleset.
+          GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_ISSUE_NUMBER: ${{ github.event.pull_request.number }}

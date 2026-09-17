@@ -4,14 +4,82 @@ import {
 } from "./json-diff-checker"
 const { glob } = require("glob")
 const path = require("path")
-const { execSync } = require("child_process") // Needed if you want to commit/push changes
-const { Octokit } = require("@octokit/rest") // Add GitHub API client
+const fs = require("fs")
+const { Octokit } = require("@octokit/rest")
 require("dotenv").config()
 
 let inDebug = process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development'
 
+function toRepoPath(filePath: string): string {
+  return filePath.replace(/^\.\//, "").replace(/\\/g, "/")
+}
+
+async function commitTranslatedFilesViaApi({
+  octokit,
+  owner,
+  repo,
+  branch,
+  files,
+  log,
+}: {
+  octokit: any
+  owner: string
+  repo: string
+  branch: string
+  files: string[]
+  log: (message: string) => void
+}): Promise<void> {
+  const ref = `heads/${branch}`
+  const { data: refData } = await octokit.rest.git.getRef({
+    owner,
+    repo,
+    ref,
+  })
+  const parentSha = refData.object.sha
+  const { data: parentCommit } = await octokit.rest.git.getCommit({
+    owner,
+    repo,
+    commit_sha: parentSha,
+  })
+
+  const treeItems = files.map((filePath) => {
+    const content = fs.readFileSync(filePath, "utf8")
+    return {
+      path: toRepoPath(filePath),
+      mode: "100644" as const,
+      type: "blob" as const,
+      content,
+    }
+  })
+
+  const { data: newTree } = await octokit.rest.git.createTree({
+    owner,
+    repo,
+    base_tree: parentCommit.tree.sha,
+    tree: treeItems,
+  })
+
+  // Omit author, committer, and signature so GitHub verifies this as
+  // github-actions[bot]. Local git commit + push is unsigned and rejected.
+  const { data: newCommit } = await octokit.rest.git.createCommit({
+    owner,
+    repo,
+    message: "chore: Auto-translate JSON files",
+    tree: newTree.sha,
+    parents: [parentSha],
+  })
+
+  await octokit.rest.git.updateRef({
+    owner,
+    repo,
+    ref,
+    sha: newCommit.sha,
+  })
+
+  log(`Created verified commit ${newCommit.sha} on ${branch}`)
+}
+
 async function run() {
-  // Initialize variables that need to be accessible in the finally block
   let logs: string[] = []
   let filesModified: string[] = []
   let filesErrored: string[] = []
@@ -20,6 +88,7 @@ async function run() {
   let repoOwner: string | undefined
   let repoName: string | undefined
   let issueNumber: string | undefined
+  let hadError = false
 
   const log = (message: string) => {
     process.stdout.write(message + "\n")
@@ -27,7 +96,6 @@ async function run() {
   }
 
   try {
-    // 1. Get environment variables
     const sourceFilePath = process.env.SOURCE_JSON_FILE_PATH
     const targetJsonGlobPattern = process.env.TARGET_JSON_GLOB_PATTERN
     const baseSha = process.env.BASE_COMMIT_SHA
@@ -36,13 +104,11 @@ async function run() {
     const deeplApiKey = process.env.DEEPL_API_KEY
     const commitChanges = process.env.COMMIT_CHANGES === "true"
     const isDeepLFreeApi = process.env.IS_DEEPL_FREE_API === "true"
-    // NEW: Get the non-splitting tags from environment variable
     const deeplNonSplittingTagsStr = process.env.DEEPL_NON_SPLITTING_TAGS
     const deeplNonSplittingTags = deeplNonSplittingTagsStr
       ? deeplNonSplittingTagsStr.split(",")
       : undefined
 
-    // GitHub API setup
     const githubToken = process.env.GITHUB_TOKEN
     octokit = githubToken ? new Octokit({ auth: githubToken }) : null
     repoOwner = process.env.GITHUB_REPOSITORY_OWNER
@@ -71,7 +137,12 @@ async function run() {
       )
     }
 
-    // 2. Calculate differences from the source file's history
+    if (commitChanges && (!octokit || !repoOwner || !repoName || !gitBranchName)) {
+      throw new Error(
+        "COMMIT_CHANGES requires GITHUB_TOKEN, GITHUB_REPOSITORY_OWNER, GITHUB_REPOSITORY, and GIT_BRANCH_NAME."
+      )
+    }
+
     log("Calculating differences...")
     const differences = await getJsonFileDifferencesBetweenCommits(
       sourceFilePath,
@@ -80,7 +151,15 @@ async function run() {
     )
     log("Calculated Differences: " + JSON.stringify(differences, null, 2))
 
-    // 3. Resolve glob pattern to a list of target files
+    if (
+      differences.added.length === 0 &&
+      differences.updated.length === 0 &&
+      differences.deleted.length === 0
+    ) {
+      log("No English translation diffs to apply.")
+      return
+    }
+
     log(`Searching for target files with pattern: ${targetJsonGlobPattern}`)
     targetFiles = await glob(targetJsonGlobPattern)
 
@@ -97,7 +176,6 @@ async function run() {
       "ar-001",
       "fil"
     ]
-    
 
     targetFiles = targetFiles.filter((a: string) => {
       return a != "en/auth.json" && !excludedLanguageCodes.includes(a.split("/")[0].toLowerCase())
@@ -110,7 +188,6 @@ async function run() {
 
     log("Found target files: " + targetFiles.map((file) => file.split("/")[0]).join(", "))
 
-    // 4. Iterate through each target file and apply differences with translation
     for (const targetFilePath of targetFiles) {
       const dirName = path.basename(path.dirname(targetFilePath))
       let targetLangCode = dirName.toUpperCase()
@@ -123,7 +200,7 @@ async function run() {
 
       log(`➡️ Updating ${targetLangCode} ...`)
       try {
-        // Pass the non-splitting tags to applyJsonDifferencesToFile
+        const before = fs.readFileSync(targetFilePath, "utf8")
         await applyJsonDifferencesToFile(
           targetFilePath,
           differences,
@@ -132,7 +209,10 @@ async function run() {
           isDeepLFreeApi,
           deeplNonSplittingTags
         )
-        filesModified.push(targetFilePath)
+        const after = fs.readFileSync(targetFilePath, "utf8")
+        if (before !== after) {
+          filesModified.push(targetFilePath)
+        }
       } catch (error) {
         const errorMsg = `❌ \n\tError processing ${targetFilePath}: ${(error as Error).message}`
         console.error(errorMsg)
@@ -143,49 +223,27 @@ async function run() {
 
     log("All target files synchronization and translation attempt complete!")
 
-    // 5. Optional: Commit and push changes if enabled
     if (commitChanges && filesModified.length > 0) {
-      log("Committing and pushing translated files...")
-      execSync('git config user.name "github-actions[bot]"')
-      execSync(
-        'git config user.email "github-actions[bot]@users.noreply.github.com"'
-      )
-
-      log("checkout: " + gitBranchName)
-      execSync(`git checkout ${gitBranchName}`)
-
-      for (const filePath of filesModified) {
-        execSync(`git add "${filePath}"`)
-      }
-
-      try {
-        execSync("git diff-index --quiet HEAD --")
-        log("No actual changes detected to commit.")
-      } catch (e) {
-        try {
-          execSync('git commit -m "chore: Auto-translate JSON files"')
-          execSync("git push")
-          log("Successfully committed and pushed translated files.")
-        } catch (commitPushError) {
-          const errorMsg = `Failed to commit or push changes: ${(commitPushError as Error).message}`
-          console.error(errorMsg)
-          log(errorMsg)
-          throw new Error(
-            `Git commit/push failed: ${(commitPushError as Error).message}`
-          )
-        }
-      }
+      log("Creating verified commit via GitHub API...")
+      await commitTranslatedFilesViaApi({
+        octokit,
+        owner: repoOwner!,
+        repo: repoName!,
+        branch: gitBranchName!,
+        files: filesModified,
+        log,
+      })
+      log("Successfully committed translated files.")
     } else if (commitChanges && filesModified.length === 0) {
       log("Commit changes enabled, but no files were modified.")
     }
 
   } catch (error) {
+    hadError = true
     const errorMsg = "Workflow Script Error: " + (error as Error).message
     console.error(errorMsg)
     log(errorMsg)
-    // Don't exit here - let the finally block handle the comment
   } finally {
-    // 6. Post comment to GitHub PR if we have the necessary information
     if (octokit && repoOwner && repoName && issueNumber) {
       try {
         const commentBody = `## JSON Translation Sync Results
@@ -221,6 +279,13 @@ ${logs.join('\n')}
       log("Skipping GitHub comment - missing required environment variables (GITHUB_TOKEN, GITHUB_REPOSITORY_OWNER, GITHUB_REPOSITORY, or GITHUB_ISSUE_NUMBER)")
     }
   }
+
+  if (hadError) {
+    process.exit(1)
+  }
 }
 
-run()
+run().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})

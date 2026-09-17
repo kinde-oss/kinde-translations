@@ -2111,6 +2111,29 @@
               "type": "string"
             }
           }
+        },
+        "change_plan_confirm_page": {
+          "type": "object",
+          "properties": {
+            "heading": {
+              "type": "string"
+            },
+            "intro_with_purchases": {
+              "type": "string"
+            },
+            "intro_without_purchases": {
+              "type": "string"
+            },
+            "closing": {
+              "type": "string"
+            },
+            "cancel_button": {
+              "type": "string"
+            },
+            "change_plan_button": {
+              "type": "string"
+            }
+          }
         }
       },
       "required": [
