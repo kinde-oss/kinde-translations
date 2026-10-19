@@ -1563,6 +1563,27 @@
             },
             "organization_connection_not_allowed": {
               "type": "string"
+            },
+            "billing_payment_session_invalid": {
+              "type": "string"
+            },
+            "billing_details_update_failed": {
+              "type": "string"
+            },
+            "billing_details_max_attempts_exceeded": {
+              "type": "string"
+            },
+            "billing_subscription_prepare_failed": {
+              "type": "string"
+            },
+            "billing_subscription_setup_failed": {
+              "type": "string"
+            },
+            "billing_payment_method_attach_failed": {
+              "type": "string"
+            },
+            "billing_payment_setup_failed": {
+              "type": "string"
             }
           },
           "required": [
