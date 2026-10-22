@@ -2018,6 +2018,9 @@
             "plan_summary_heading": {
               "type": "string"
             },
+            "select_other_plan_link": {
+              "type": "string"
+            },
             "card_details_heading": {
               "type": "string"
             },
