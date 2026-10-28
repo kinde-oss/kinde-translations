@@ -655,6 +655,9 @@
             "description": {
               "type": "string"
             },
+            "description_suspended": {
+              "type": "string"
+            },
             "back_to_home_button": {
               "type": "string"
             },
