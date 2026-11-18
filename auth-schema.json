@@ -1587,6 +1587,78 @@
             },
             "billing_payment_setup_failed": {
               "type": "string"
+            },
+            "saml_app_not_found": {
+              "type": "string"
+            },
+            "saml_app_disabled": {
+              "type": "string"
+            },
+            "saml_app_not_configured": {
+              "type": "string"
+            },
+            "saml_app_not_entitled": {
+              "type": "string"
+            },
+            "saml_app_not_on_portal": {
+              "type": "string"
+            },
+            "saml_app_not_available_for_organization": {
+              "type": "string"
+            },
+            "saml_app_access_denied": {
+              "type": "string"
+            },
+            "saml_app_user_not_found": {
+              "type": "string"
+            },
+            "saml_app_launch_refused": {
+              "type": "string"
+            },
+            "saml_app_sign_in_required": {
+              "type": "string"
+            },
+            "saml_app_request_missing": {
+              "type": "string"
+            },
+            "saml_app_request_invalid": {
+              "type": "string"
+            },
+            "saml_app_request_issuer_mismatch": {
+              "type": "string"
+            },
+            "saml_app_sign_in_not_configured": {
+              "type": "string"
+            },
+            "saml_app_sign_in_start_failed": {
+              "type": "string"
+            },
+            "saml_app_sign_in_session_invalid": {
+              "type": "string"
+            },
+            "saml_app_sign_in_expired": {
+              "type": "string"
+            },
+            "saml_app_sign_in_already_used": {
+              "type": "string"
+            },
+            "saml_app_sign_in_other_browser": {
+              "type": "string"
+            },
+            "saml_app_response_failed": {
+              "type": "string"
+            },
+            "saml_app_logout_request_invalid": {
+              "type": "string"
+            },
+            "saml_app_logout_issuer_mismatch": {
+              "type": "string"
+            },
+            "saml_app_logout_failed": {
+              "type": "string"
+            },
+            "saml_app_unavailable": {
+              "type": "string"
             }
           },
           "required": [
