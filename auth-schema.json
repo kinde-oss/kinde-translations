@@ -1659,6 +1659,18 @@
             },
             "saml_app_unavailable": {
               "type": "string"
+            },
+            "saml_app_organization_mismatch": {
+              "type": "string"
+            },
+            "saml_app_test_link_expired": {
+              "type": "string"
+            },
+            "saml_app_not_organization_member": {
+              "type": "string"
+            },
+            "saml_app_sign_in_to_allowed_organization": {
+              "type": "string"
             }
           },
           "required": [
