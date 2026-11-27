@@ -807,6 +807,12 @@
             },
             "back_home_button": {
               "type": "string"
+            },
+            "recovery_codes_page_error_expired": {
+              "type": "string"
+            },
+            "recovery_codes_page_back_to_account_link": {
+              "type": "string"
             }
           },
           "required": [
@@ -1509,6 +1515,38 @@
             "email_subject",
             "email_disclaimer"
           ]
+        },
+        "mfa_method_changed_email": {
+          "type": "object",
+          "properties": {
+            "subject_added": {
+              "type": "string"
+            },
+            "subject_removed": {
+              "type": "string"
+            },
+            "heading_added": {
+              "type": "string"
+            },
+            "heading_removed": {
+              "type": "string"
+            },
+            "body_added": {
+              "type": "string"
+            },
+            "body_removed": {
+              "type": "string"
+            },
+            "if_you": {
+              "type": "string"
+            },
+            "if_not_you": {
+              "type": "string"
+            },
+            "disclaimer": {
+              "type": "string"
+            }
+          }
         },
         "general_errors": {
           "type": "object",
